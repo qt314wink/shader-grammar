@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 — 2026-09-01
+
+Nacre Atelier as the living explorer.
+
+- `docs/ATELIER.md` describes Look / Fuse / Proof.
+- The atelier drives one shader from operator weights. Fusion mixes two recipes.
+- No schema changes. v0.1 catalog unchanged.
+
 ## 0.1.0 — 2026-08-31
 
 First closed catalog.

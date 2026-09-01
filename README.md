@@ -14,6 +14,11 @@ nebula, and opalescent glass can all be described without inventing a
 one-off concept for each, the ontology is beginning to generalize rather
 than cataloguing effects. That is the v0.1 acceptance test, and it passes.
 
+The grammar is the language. **Nacre Atelier** is the lookdev studio that
+consumes it: twelve living specimens, operator-driven fusion, and a coverage
+matrix that proves reuse. See `docs/ATELIER.md`. The canvas is an evaluative
+sketch — not a claim that Airy or Mie are implemented.
+
 ## Why this exists
 
 Shader libraries accumulate named looks. Aether (archived) was an
