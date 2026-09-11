@@ -45,6 +45,7 @@ catalog/operators.json          closed set of 13 operators
 recipes/*.json                  12 specimen recipes
 examples/valid/                 positive control
 examples/invalid/               named-effect trap (must fail)
+examples/illustrative/          GLSL/WGSL thin-film reference snippets (not a renderer)
 docs/ontology-gaps.md
 reports/validation-report.md    generated
 tools/validate.mjs

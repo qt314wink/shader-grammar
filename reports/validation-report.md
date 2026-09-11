@@ -1,6 +1,6 @@
 # Shader Grammar v0.1 — validation report
 
-Generated 2026-09-01T02:04:36.300Z
+Generated 2026-09-11T11:12:57.565Z
 
 **Result: PASS**
 
