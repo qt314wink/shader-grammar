@@ -40,6 +40,7 @@ schemas/
   field.schema.json
   operator.schema.json
   recipe.schema.json
+  experiment-receipt.schema.json  governed post-run evidence and handoff contract
 taxonomy/material-taxonomy.yaml
 catalog/operators.json          closed set of 13 operators
 recipes/*.json                  12 specimen recipes
@@ -76,6 +77,19 @@ The gate is stronger than schema-valid:
 5. **Every catalog operator is used by at least two specimens.**
 6. The named-effect anti-example is rejected.
 7. The minimal thin-film example is accepted.
+8. The experiment receipt contract compiles under JSON Schema Draft 2020-12 and rejects an empty receipt.
+
+## Experiment receipts
+
+`schemas/experiment-receipt.schema.json` governs the post-run boundary between
+visual-mechanism experiments and downstream decisions. It records exact inputs,
+actions, outputs, determinations, evidence, uncertainty, alternatives, deviations,
+exceptions, measurements, timing, reproducibility, semantic QA, governance,
+milestone gates, and handoff requirements.
+
+`supported` is deliberately not equivalent to `canonical`. Canonical changes require
+separate approval, verified reproducibility, explicit consequences, and a rollback
+plan.
 
 ## Lineage
 
