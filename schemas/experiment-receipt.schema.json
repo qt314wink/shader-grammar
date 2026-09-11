@@ -1,0 +1,1268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shader-grammar.dev/schemas/v0.1/experiment-receipt.schema.json",
+  "title": "Visual Mechanism Reconstruction Experiment Receipt",
+  "description": "Canonical post-execution evidence contract for the Visual Mechanism Reconstruction System. A receipt records what was intended, what actually ran, the exact inputs and outputs, what the results do and do not establish, which failures or deviations occurred, what downstream work may trust, and whether a milestone is unlocked. It is deliberately stricter than a run log: a syntactically valid receipt can still declare itself incomplete or invalid, but it may not claim completion, support, reproducibility, canonical consequence, or milestone unlock without the corresponding evidence and governance gates.\n\nADVANCED DEFINITION OF DONE\nA receipt is done only when: (1) it is bound to an immutable pre-run contract and uniquely identified execution; (2) all authoritative inputs, material configuration, software, hardware, random state, and lineage needed to identify or reproduce the run are recorded; (3) planned and actual actions are distinguishable and every material divergence is classified; (4) expected and actual outputs are enumerated, integrity-addressed where persisted, and checked; (5) every determination states its scope, evidence, uncertainty, alternatives, falsifiers, limitations, and prohibited inferences; (6) tested and supported claims point to executed tests and admissible evidence; (7) timing and measurement applicability are explicitly decided rather than silently omitted; (8) semantic checks prevent observations, interpretations, hypotheses, measurements, and causal claims from being conflated; (9) exceptions, stop conditions, unresolved risks, and scope exclusions are visible; (10) reproducibility is either verified with an independent rerun or honestly classified at a lower state with blockers; (11) canonical changes are separately reviewed, reversible, and never inferred merely from support; (12) the next milestone is unlocked only when its named prerequisites have passed; (13) the handoff states exactly what the next stage may trust, must verify, must not infer, and must receive; and (14) a final validity assessment identifies all conditions that make the receipt incomplete or invalid. The expected output is a self-contained, machine-valid, evidence-linked receipt whose claims can be audited without rerunning the experiment and whose reproduction package makes rerunning possible when required.",
+  "$comment": "Normative schema. Custom x-* annotations document the recursive Socratic design review and may be ignored by standard JSON Schema validators.",
+  "x-schema-maturity": "advanced",
+  "x-socratic-method": {
+    "questions_applied_to_every_material_field": [
+      "What downstream decision does this field enable?",
+      "What failure or ambiguity does it prevent?",
+      "What evidence could falsify or contradict the assertion?",
+      "What must the next stage be able to trust without repeating this work?",
+      "What omission, contradiction, or unmet condition makes the receipt incomplete or invalid?"
+    ],
+    "recursion_rule": "Apply the five questions first to the receipt, then to every claim-bearing section, then to each determination, measurement, exception, deviation, governance action, milestone gate, and handoff assertion. Stop refining only when the enabled decision, prevented failure, falsifier, downstream trust boundary, and invalidity condition are explicit or intentionally not applicable with a reason."
+  },
+  "x-definition-of-done": {
+    "status": "normative",
+    "required_outcomes": [
+      "identity_and_contract_binding_complete",
+      "input_and_output_lineage_complete",
+      "actual_action_reconstructable",
+      "determinations_evidence_linked_and_falsifiable",
+      "scope_uncertainty_alternatives_and_deviations_disclosed",
+      "measurement_and_timing_applicability_resolved",
+      "semantic_validity_passed",
+      "qa_disposition_recorded",
+      "reproducibility_state_evidenced",
+      "governance_and_canonical_effects_explicit",
+      "stop_conditions_resolved_or_blocking",
+      "milestone_gate_defensible",
+      "downstream_handoff_trust_boundary_complete",
+      "receipt_validity_self_assessed"
+    ],
+    "invalid_if": [
+      "A persisted authoritative artifact lacks an integrity digest.",
+      "A tested or supported determination lacks an executed test, admissible evidence, and a falsification assessment.",
+      "A supported determination omits alternatives, residual uncertainty, limitations, or prohibited inferences.",
+      "A canonical state is claimed without approved independent review and explicit canonical consequences.",
+      "A milestone is marked unlocked while any named prerequisite is unmet or any blocking stop condition is triggered.",
+      "A deviation or exception is known but unrecorded, or its impact on validity is undecided.",
+      "Measurement or timing is silently omitted instead of being declared applicable, not applicable, or unknown.",
+      "The next stage cannot identify what it may trust, what it must verify, or what it must not infer.",
+      "The receipt claims complete while its final validity assessment is incomplete or invalid."
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "receipt_status",
+    "experiment_identity",
+    "provenance",
+    "scope",
+    "inputs",
+    "action",
+    "outputs",
+    "measurements",
+    "timing",
+    "determinations",
+    "uncertainty",
+    "alternative_hypotheses",
+    "deviations",
+    "exceptions",
+    "reproducibility",
+    "semantic_validity",
+    "qa",
+    "stop_conditions",
+    "governance",
+    "canonical_consequences",
+    "next_milestone",
+    "handoff",
+    "validity",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "description": "Version of this receipt contract, enabling deterministic validator and migration selection."
+    },
+    "receipt_id": {
+      "$ref": "#/$defs/stableId",
+      "description": "Globally stable identifier for this receipt; prevents runs from being confused, overwritten, or merged."
+    },
+    "receipt_status": {
+      "enum": ["draft", "complete", "incomplete", "invalid", "superseded"],
+      "description": "Lifecycle state of the receipt document, not the outcome of the experiment. Only complete may unlock a milestone or authorize a canonical change."
+    },
+    "supersedes_receipt_id": {
+      "$ref": "#/$defs/stableId",
+      "description": "Earlier receipt replaced by this one. The earlier record remains immutable and traceable."
+    },
+    "experiment_identity": {
+      "$ref": "#/$defs/experimentIdentity"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/inputRecord" },
+      "description": "Exact evidence, code, configuration, models, schemas, and prior records consumed by the run."
+    },
+    "action": {
+      "$ref": "#/$defs/action"
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/outputRecord" },
+      "description": "Expected and actual products of execution, including missing or rejected products so absence cannot disappear from the record."
+    },
+    "measurements": {
+      "$ref": "#/$defs/measurementSection"
+    },
+    "timing": {
+      "$ref": "#/$defs/timingSection"
+    },
+    "determinations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/determination" },
+      "description": "Bounded conclusions actually licensed by the execution. These are not free-form summaries and do not themselves change canonical knowledge."
+    },
+    "uncertainty": {
+      "$ref": "#/$defs/uncertaintySection"
+    },
+    "alternative_hypotheses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/alternativeHypothesis" },
+      "description": "Live, weakened, rejected, or newly discovered rival explanations. An empty array is allowed only when the receipt explains in uncertainty why no credible alternative exists."
+    },
+    "deviations": {
+      "$ref": "#/$defs/deviationSection"
+    },
+    "exceptions": {
+      "$ref": "#/$defs/exceptionSection"
+    },
+    "reproducibility": {
+      "$ref": "#/$defs/reproducibility"
+    },
+    "semantic_validity": {
+      "$ref": "#/$defs/semanticValidity"
+    },
+    "qa": {
+      "$ref": "#/$defs/qa"
+    },
+    "stop_conditions": {
+      "$ref": "#/$defs/stopConditionSection"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "canonical_consequences": {
+      "$ref": "#/$defs/canonicalConsequences"
+    },
+    "next_milestone": {
+      "$ref": "#/$defs/milestone"
+    },
+    "handoff": {
+      "$ref": "#/$defs/handoff"
+    },
+    "validity": {
+      "$ref": "#/$defs/validity"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "signed_attestations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/attestation" },
+      "description": "Optional cryptographic or accountable human/agent attestations. Signatures do not replace evidence or QA."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "receipt_status": { "const": "complete" } }, "required": ["receipt_status"] },
+      "then": {
+        "properties": {
+          "validity": { "properties": { "state": { "const": "valid" }, "definition_of_done_met": { "const": true } }, "required": ["state", "definition_of_done_met"] },
+          "qa": { "properties": { "overall_result": { "const": "pass" } }, "required": ["overall_result"] },
+          "semantic_validity": { "properties": { "overall_result": { "const": "pass" } }, "required": ["overall_result"] }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "receipt_status": { "const": "superseded" } }, "required": ["receipt_status"] },
+      "then": { "required": ["supersedes_receipt_id"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "governance": { "properties": { "knowledge_state": { "const": "canonical" } }, "required": ["knowledge_state"] }
+        },
+        "required": ["governance"]
+      },
+      "then": {
+        "properties": {
+          "receipt_status": { "const": "complete" },
+          "reproducibility": { "properties": { "state": { "enum": ["verified_same_environment", "verified_independent_environment"] } }, "required": ["state"] },
+          "governance": {
+            "properties": {
+              "review_state": { "const": "approved" },
+              "approvals": { "minItems": 1 },
+              "canonical_promotion_separate_from_support": { "const": true }
+            },
+            "required": ["review_state", "approvals", "canonical_promotion_separate_from_support"]
+          },
+          "canonical_consequences": {
+            "properties": {
+              "disposition": { "enum": ["promote", "modify", "deprecate", "revoke"] },
+              "changes": { "minItems": 1 },
+              "rollback_plan": { "type": "string", "minLength": 1 }
+            },
+            "required": ["disposition", "changes", "rollback_plan"]
+          },
+          "qa": { "properties": { "overall_result": { "const": "pass" } }, "required": ["overall_result"] },
+          "semantic_validity": { "properties": { "overall_result": { "const": "pass" } }, "required": ["overall_result"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "next_milestone": { "properties": { "state": { "const": "unlocked" } }, "required": ["state"] }
+        },
+        "required": ["next_milestone"]
+      },
+      "then": {
+        "properties": {
+          "receipt_status": { "const": "complete" },
+          "next_milestone": {
+            "properties": {
+              "prerequisites": {
+                "minItems": 1,
+                "items": { "allOf": [{ "$ref": "#/$defs/prerequisite" }, { "properties": { "satisfied": { "const": true } } }] }
+              },
+              "blocking_reasons": { "maxItems": 0 }
+            },
+            "required": ["prerequisites", "blocking_reasons"]
+          },
+          "stop_conditions": { "properties": { "blocking_triggered": { "const": false } }, "required": ["blocking_triggered"] },
+          "validity": { "properties": { "state": { "const": "valid" }, "definition_of_done_met": { "const": true } }, "required": ["state", "definition_of_done_met"] }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:/-]{2,127}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "uriOrPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "enum": ["sha256", "sha384", "sha512", "blake3"] },
+        "value": { "type": "string", "pattern": "^[A-Fa-f0-9]{64,128}$" }
+      },
+      "description": "Content digest used to prove artifact identity rather than relying on a mutable name or location."
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id", "actor_type", "role"],
+      "properties": {
+        "actor_id": { "$ref": "#/$defs/stableId" },
+        "actor_type": { "enum": ["human", "agent", "service", "team", "unknown"] },
+        "role": { "$ref": "#/$defs/nonEmptyString" },
+        "display_name": { "$ref": "#/$defs/nonEmptyString" },
+        "organization": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "kind", "role", "locator", "persistence", "integrity"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/stableId" },
+        "kind": {
+          "enum": ["image", "video", "audio", "dataset", "evidence_record", "observation_record", "interpretation_record", "specimen_profile", "hypothesis_record", "experiment_contract", "schema", "source_code", "shader", "configuration", "model", "prompt", "render", "measurement_record", "log", "report", "environment_manifest", "container", "other"]
+        },
+        "role": { "$ref": "#/$defs/nonEmptyString" },
+        "locator": { "$ref": "#/$defs/uriOrPath" },
+        "media_type": { "type": "string", "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$" },
+        "persistence": { "enum": ["immutable", "versioned", "mutable", "ephemeral"] },
+        "integrity": {
+          "oneOf": [
+            { "$ref": "#/$defs/digest" },
+            { "type": "null", "description": "Allowed only for ephemeral or missing artifacts, with an explicit integrity limitation." }
+          ]
+        },
+        "integrity_limitation": { "$ref": "#/$defs/nonEmptyString" },
+        "size_bytes": { "type": "integer", "minimum": 0 },
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "lineage_parent_ids": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/stableId" } },
+        "metadata": { "type": "object", "description": "Artifact-specific descriptive metadata. It must not carry normative claims that belong elsewhere in the receipt." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "persistence": { "enum": ["immutable", "versioned", "mutable"] } }, "required": ["persistence"] },
+          "then": { "properties": { "integrity": { "$ref": "#/$defs/digest" } } }
+        },
+        {
+          "if": { "properties": { "integrity": { "type": "null" } }, "required": ["integrity"] },
+          "then": { "required": ["integrity_limitation"] }
+        }
+      ]
+    },
+    "evidenceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "locator", "supports", "admissibility", "falsification_relevance"],
+      "properties": {
+        "evidence_id": { "$ref": "#/$defs/stableId" },
+        "locator": { "$ref": "#/$defs/uriOrPath" },
+        "fragment": { "$ref": "#/$defs/nonEmptyString" },
+        "supports": { "$ref": "#/$defs/nonEmptyString" },
+        "admissibility": { "enum": ["direct", "derived", "corroborating", "negative", "context_only", "inadmissible"] },
+        "quality": { "enum": ["high", "medium", "low", "unknown"] },
+        "falsification_relevance": { "$ref": "#/$defs/nonEmptyString" },
+        "limitations": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } }
+      }
+    },
+    "experimentIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["experiment_id", "contract_ref", "run_id", "run_attempt", "started_at", "ended_at", "purpose", "research_question"],
+      "properties": {
+        "experiment_id": { "$ref": "#/$defs/stableId" },
+        "contract_ref": { "$ref": "#/$defs/artifactRef" },
+        "run_id": { "$ref": "#/$defs/stableId" },
+        "run_attempt": { "type": "integer", "minimum": 1 },
+        "parent_run_id": { "$ref": "#/$defs/stableId" },
+        "started_at": { "$ref": "#/$defs/timestamp" },
+        "ended_at": { "$ref": "#/$defs/timestamp" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "research_question": { "$ref": "#/$defs/nonEmptyString" },
+        "execution_mode": { "enum": ["preregistered", "exploratory", "replication", "regression", "ablation", "benchmark", "incident_recovery"] }
+      },
+      "description": "Binds the post-run receipt to the pre-run intent and to one concrete attempt, preventing hindsight edits from masquerading as the original plan."
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recorded_by", "executed_by", "recorded_at", "source_chain", "custody_statement", "rights_and_policy"],
+      "properties": {
+        "recorded_by": { "$ref": "#/$defs/actor" },
+        "executed_by": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/actor" } },
+        "recorded_at": { "$ref": "#/$defs/timestamp" },
+        "source_chain": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artifactRef" } },
+        "custody_statement": { "$ref": "#/$defs/nonEmptyString" },
+        "rights_and_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "permitted_uses", "restrictions"],
+          "properties": {
+            "status": { "enum": ["verified", "declared", "unknown", "restricted", "disputed"] },
+            "license": { "$ref": "#/$defs/nonEmptyString" },
+            "permitted_uses": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "restrictions": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "policy_refs": { "type": "array", "items": { "$ref": "#/$defs/uriOrPath" } }
+          }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["in_scope", "out_of_scope", "anti_questions", "unit_of_analysis", "validity_domain", "generalization_boundary"],
+      "properties": {
+        "in_scope": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "out_of_scope": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "anti_questions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" }, "description": "Questions the experiment is explicitly not allowed to answer from its evidence." },
+        "unit_of_analysis": { "$ref": "#/$defs/nonEmptyString" },
+        "validity_domain": { "$ref": "#/$defs/nonEmptyString" },
+        "generalization_boundary": { "$ref": "#/$defs/nonEmptyString" },
+        "known_confounders": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } }
+      }
+    },
+    "inputRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "authoritativeness", "used_as", "selection_reason", "preprocessing", "suitability"],
+      "properties": {
+        "artifact": { "$ref": "#/$defs/artifactRef" },
+        "authoritativeness": { "enum": ["authoritative", "supporting", "control", "comparison", "context_only"] },
+        "used_as": { "$ref": "#/$defs/nonEmptyString" },
+        "selection_reason": { "$ref": "#/$defs/nonEmptyString" },
+        "preprocessing": { "type": "array", "items": { "$ref": "#/$defs/transformation" } },
+        "suitability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "questions_supported", "questions_not_supported", "reason"],
+          "properties": {
+            "status": { "enum": ["suitable", "conditionally_suitable", "unsuitable", "unknown"] },
+            "questions_supported": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "questions_not_supported": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "reason": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        }
+      }
+    },
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "parameters", "tool_ref", "reversible", "effect_on_evidence"],
+      "properties": {
+        "operation": { "$ref": "#/$defs/nonEmptyString" },
+        "parameters": { "type": "object" },
+        "tool_ref": { "$ref": "#/$defs/nonEmptyString" },
+        "reversible": { "type": "boolean" },
+        "effect_on_evidence": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operating_system", "hardware", "runtime", "dependencies", "locale", "clock", "randomness"],
+      "properties": {
+        "operating_system": { "$ref": "#/$defs/nonEmptyString" },
+        "hardware": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "runtime": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/versionedComponent" } },
+        "dependencies": { "type": "array", "items": { "$ref": "#/$defs/versionedComponent" } },
+        "drivers": { "type": "array", "items": { "$ref": "#/$defs/versionedComponent" } },
+        "locale": { "$ref": "#/$defs/nonEmptyString" },
+        "clock": { "$ref": "#/$defs/nonEmptyString" },
+        "randomness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["policy", "sources", "seeds"],
+          "properties": {
+            "policy": { "enum": ["deterministic", "recorded_stochastic", "uncontrolled_stochastic", "not_applicable"] },
+            "sources": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "seeds": { "type": "array", "items": { "oneOf": [{ "type": "integer" }, { "$ref": "#/$defs/nonEmptyString" }] } },
+            "limitation": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        },
+        "manifest_ref": { "$ref": "#/$defs/artifactRef" }
+      }
+    },
+    "versionedComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "version": { "$ref": "#/$defs/nonEmptyString" },
+        "digest": { "$ref": "#/$defs/digest" },
+        "source": { "$ref": "#/$defs/uriOrPath" }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planned_method_ref", "actual_steps", "environment", "controls_executed", "execution_outcome", "failure_log"],
+      "properties": {
+        "planned_method_ref": { "$ref": "#/$defs/uriOrPath" },
+        "actual_steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/executionStep" } },
+        "environment": { "$ref": "#/$defs/environment" },
+        "controls_executed": { "type": "array", "items": { "$ref": "#/$defs/controlExecution" } },
+        "execution_outcome": { "enum": ["completed_as_planned", "completed_with_deviations", "partially_completed", "stopped", "failed"] },
+        "failure_log": { "type": "array", "items": { "$ref": "#/$defs/failure" } }
+      }
+    },
+    "executionStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_id", "sequence", "action", "intention", "executor", "started_at", "ended_at", "status", "input_ids", "output_ids", "command_or_procedure", "evidence_refs"],
+      "properties": {
+        "step_id": { "$ref": "#/$defs/stableId" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "action": { "$ref": "#/$defs/nonEmptyString" },
+        "intention": { "$ref": "#/$defs/nonEmptyString" },
+        "executor": { "$ref": "#/$defs/actor" },
+        "started_at": { "$ref": "#/$defs/timestamp" },
+        "ended_at": { "$ref": "#/$defs/timestamp" },
+        "status": { "enum": ["passed", "failed", "skipped", "stopped", "partial"] },
+        "input_ids": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "output_ids": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "command_or_procedure": { "$ref": "#/$defs/nonEmptyString" },
+        "parameters": { "type": "object" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "notes": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "controlExecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["control_id", "purpose", "status", "result", "evidence_refs"],
+      "properties": {
+        "control_id": { "$ref": "#/$defs/stableId" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "status": { "enum": ["passed", "failed", "invalid", "not_run"] },
+        "result": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["failure_id", "category", "severity", "description", "detected_at", "impact", "resolution_state"],
+      "properties": {
+        "failure_id": { "$ref": "#/$defs/stableId" },
+        "category": { "enum": ["input", "method", "implementation", "rendering", "measurement", "timing", "environment", "semantic", "governance", "infrastructure", "unknown"] },
+        "severity": { "enum": ["informational", "minor", "major", "critical"] },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "detected_at": { "$ref": "#/$defs/timestamp" },
+        "impact": { "$ref": "#/$defs/nonEmptyString" },
+        "resolution_state": { "enum": ["resolved", "mitigated", "accepted", "open", "unresolved"] },
+        "resolution": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "outputRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_id", "expected", "status", "purpose", "artifact", "acceptance_checks", "downstream_use"],
+      "properties": {
+        "output_id": { "$ref": "#/$defs/stableId" },
+        "expected": { "type": "boolean" },
+        "status": { "enum": ["produced", "missing", "partial", "rejected", "not_applicable"] },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "artifact": { "oneOf": [{ "$ref": "#/$defs/artifactRef" }, { "type": "null" }] },
+        "absence_reason": { "$ref": "#/$defs/nonEmptyString" },
+        "acceptance_checks": { "type": "array", "items": { "$ref": "#/$defs/checkResult" } },
+        "downstream_use": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "produced" } }, "required": ["status"] },
+          "then": { "properties": { "artifact": { "$ref": "#/$defs/artifactRef" }, "acceptance_checks": { "minItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "status": { "enum": ["missing", "partial", "rejected"] } }, "required": ["status"] },
+          "then": { "required": ["absence_reason"] }
+        }
+      ]
+    },
+    "checkResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "criterion", "result", "evidence_refs"],
+      "properties": {
+        "check_id": { "$ref": "#/$defs/stableId" },
+        "criterion": { "$ref": "#/$defs/nonEmptyString" },
+        "result": { "enum": ["pass", "fail", "warning", "not_applicable", "not_run"] },
+        "actual": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "measurementSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applicability", "reason", "executions", "coverage_assessment"],
+      "properties": {
+        "applicability": { "enum": ["applicable", "not_applicable", "unknown"] },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "executions": { "type": "array", "items": { "$ref": "#/$defs/measurementExecution" } },
+        "coverage_assessment": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "applicability": { "const": "applicable" } }, "required": ["applicability"] },
+          "then": { "properties": { "executions": { "minItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "applicability": { "enum": ["not_applicable", "unknown"] } }, "required": ["applicability"] },
+          "then": { "properties": { "executions": { "maxItems": 0 } } }
+        }
+      ]
+    },
+    "measurementExecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["measurement_id", "definition_ref", "property_measured", "method", "result", "units", "validity_domain", "supports", "does_not_establish", "blindspots", "uncertainty", "status", "evidence_refs"],
+      "properties": {
+        "measurement_id": { "$ref": "#/$defs/stableId" },
+        "definition_ref": { "$ref": "#/$defs/uriOrPath" },
+        "property_measured": { "$ref": "#/$defs/nonEmptyString" },
+        "method": { "$ref": "#/$defs/nonEmptyString" },
+        "result": {},
+        "units": { "$ref": "#/$defs/nonEmptyString" },
+        "validity_domain": { "$ref": "#/$defs/nonEmptyString" },
+        "supports": { "$ref": "#/$defs/nonEmptyString" },
+        "does_not_establish": { "$ref": "#/$defs/nonEmptyString" },
+        "blindspots": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "uncertainty": { "$ref": "#/$defs/nonEmptyString" },
+        "status": { "enum": ["valid", "invalid", "partial", "inconclusive"] },
+        "evidence_refs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "timingSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applicability", "reason", "contract_ref", "observation_window", "sampling", "sufficiency", "clock_and_sync", "timing_risks"],
+      "properties": {
+        "applicability": { "enum": ["applicable", "not_applicable", "unknown"] },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "contract_ref": { "oneOf": [{ "$ref": "#/$defs/artifactRef" }, { "type": "null" }] },
+        "observation_window": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "duration_seconds", "repetitions"],
+              "properties": {
+                "kind": { "enum": ["instantaneous", "short_response", "complete_cycle", "state_stability", "long_run", "cross_run", "custom"] },
+                "duration_seconds": { "type": "number", "exclusiveMinimum": 0 },
+                "repetitions": { "type": "integer", "minimum": 1 },
+                "custom_definition": { "$ref": "#/$defs/nonEmptyString" }
+              }
+            },
+            { "type": "null" }
+          ]
+        },
+        "sampling": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["rate_hz", "sample_count", "dropped_samples"],
+              "properties": {
+                "rate_hz": { "type": "number", "exclusiveMinimum": 0 },
+                "sample_count": { "type": "integer", "minimum": 1 },
+                "dropped_samples": { "type": "integer", "minimum": 0 },
+                "jitter_seconds_max": { "type": "number", "minimum": 0 }
+              }
+            },
+            { "type": "null" }
+          ]
+        },
+        "sufficiency": { "enum": ["sufficient", "insufficient", "unknown", "not_applicable"] },
+        "sufficiency_reason": { "$ref": "#/$defs/nonEmptyString" },
+        "clock_and_sync": { "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }] },
+        "timing_risks": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "applicability": { "const": "applicable" } }, "required": ["applicability"] },
+          "then": {
+            "properties": {
+              "contract_ref": { "$ref": "#/$defs/artifactRef" },
+              "observation_window": { "type": "object" },
+              "sampling": { "type": "object" },
+              "sufficiency": { "enum": ["sufficient", "insufficient", "unknown"] },
+              "clock_and_sync": { "$ref": "#/$defs/nonEmptyString" }
+            },
+            "required": ["sufficiency_reason"]
+          }
+        },
+        {
+          "if": { "properties": { "applicability": { "const": "not_applicable" } }, "required": ["applicability"] },
+          "then": {
+            "properties": {
+              "contract_ref": { "type": "null" },
+              "observation_window": { "type": "null" },
+              "sampling": { "type": "null" },
+              "sufficiency": { "const": "not_applicable" },
+              "clock_and_sync": { "type": "null" }
+            }
+          }
+        }
+      ]
+    },
+    "determination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["determination_id", "claim", "subject", "predicate", "object", "epistemic_state", "scope", "basis", "evidence_refs", "test_execution", "falsification", "confidence", "uncertainty", "limitations", "prohibited_inferences", "alternative_hypothesis_ids", "downstream_trust"],
+      "properties": {
+        "determination_id": { "$ref": "#/$defs/stableId" },
+        "claim": { "$ref": "#/$defs/nonEmptyString" },
+        "subject": { "$ref": "#/$defs/stableId" },
+        "predicate": { "$ref": "#/$defs/nonEmptyString" },
+        "object": {},
+        "epistemic_state": { "enum": ["observed", "inferred", "hypothesized", "tested", "supported", "contradicted", "inconclusive", "rejected"] },
+        "scope": { "$ref": "#/$defs/nonEmptyString" },
+        "basis": { "enum": ["direct_observation", "interpretive_synthesis", "deduction", "measurement", "controlled_test", "replication", "expert_review", "mixed"] },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "test_execution": { "oneOf": [{ "$ref": "#/$defs/testExecution" }, { "type": "null" }] },
+        "falsification": { "$ref": "#/$defs/falsification" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "uncertainty": { "$ref": "#/$defs/nonEmptyString" },
+        "limitations": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "prohibited_inferences": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "alternative_hypothesis_ids": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "downstream_trust": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "epistemic_state": { "enum": ["tested", "supported", "contradicted", "rejected"] } }, "required": ["epistemic_state"] },
+          "then": {
+            "properties": {
+              "test_execution": { "$ref": "#/$defs/testExecution" },
+              "evidence_refs": { "minItems": 1 },
+              "falsification": { "properties": { "assessed": { "const": true } }, "required": ["assessed"] }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "epistemic_state": { "const": "supported" } }, "required": ["epistemic_state"] },
+          "then": {
+            "properties": {
+              "basis": { "enum": ["controlled_test", "replication", "mixed"] },
+              "test_execution": { "properties": { "outcome": { "enum": ["pass", "mixed"] } }, "required": ["outcome"] },
+              "alternative_hypothesis_ids": { "minItems": 1 },
+              "confidence": { "properties": { "level": { "enum": ["moderate", "high", "very_high"] } }, "required": ["level"] }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "epistemic_state": { "enum": ["observed", "inferred", "hypothesized", "inconclusive"] } }, "required": ["epistemic_state"] },
+          "then": { "properties": { "test_execution": { "type": "null" } } }
+        }
+      ]
+    },
+    "testExecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["test_id", "contract_criterion_ref", "method", "outcome", "expected_result", "actual_result", "controls", "evidence_refs"],
+      "properties": {
+        "test_id": { "$ref": "#/$defs/stableId" },
+        "contract_criterion_ref": { "$ref": "#/$defs/uriOrPath" },
+        "method": { "$ref": "#/$defs/nonEmptyString" },
+        "outcome": { "enum": ["pass", "fail", "mixed", "invalid", "inconclusive"] },
+        "expected_result": { "$ref": "#/$defs/nonEmptyString" },
+        "actual_result": { "$ref": "#/$defs/nonEmptyString" },
+        "controls": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "evidence_refs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "falsification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessed", "falsifier", "observed", "result", "residual_risk"],
+      "properties": {
+        "assessed": { "type": "boolean" },
+        "falsifier": { "$ref": "#/$defs/nonEmptyString" },
+        "observed": { "type": "boolean" },
+        "result": { "enum": ["not_falsified", "falsified", "partially_falsified", "not_tested", "indeterminate"] },
+        "residual_risk": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "score", "method", "calibration_basis"],
+      "properties": {
+        "level": { "enum": ["very_low", "low", "moderate", "high", "very_high"] },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "method": { "$ref": "#/$defs/nonEmptyString" },
+        "calibration_basis": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "alternativeHypothesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hypothesis_id", "statement", "status", "plausibility", "distinguishing_test", "supporting_evidence_refs", "contradicting_evidence_refs", "why_not_selected", "next_action"],
+      "properties": {
+        "hypothesis_id": { "$ref": "#/$defs/stableId" },
+        "statement": { "$ref": "#/$defs/nonEmptyString" },
+        "status": { "enum": ["live", "weakened", "supported", "contradicted", "rejected", "untested", "newly_discovered"] },
+        "plausibility": { "$ref": "#/$defs/confidence" },
+        "distinguishing_test": { "$ref": "#/$defs/nonEmptyString" },
+        "supporting_evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "contradicting_evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "why_not_selected": { "$ref": "#/$defs/nonEmptyString" },
+        "next_action": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "uncertaintySection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall_level", "sources", "propagation", "decision_sensitivity", "reduction_plan", "no_alternative_hypothesis_reason"],
+      "properties": {
+        "overall_level": { "enum": ["very_low", "low", "moderate", "high", "very_high", "unknown"] },
+        "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/uncertaintySource" } },
+        "propagation": { "$ref": "#/$defs/nonEmptyString" },
+        "decision_sensitivity": { "$ref": "#/$defs/nonEmptyString" },
+        "reduction_plan": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "no_alternative_hypothesis_reason": { "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }] }
+      }
+    },
+    "uncertaintySource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "type", "magnitude", "affected_claim_ids", "mitigation"],
+      "properties": {
+        "source": { "$ref": "#/$defs/nonEmptyString" },
+        "type": { "enum": ["aleatoric", "epistemic", "measurement", "model", "input", "sampling", "timing", "semantic", "implementation", "unknown"] },
+        "magnitude": { "enum": ["negligible", "low", "moderate", "high", "unknown"] },
+        "affected_claim_ids": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "mitigation": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "deviationSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["occurred", "items", "overall_impact"],
+      "properties": {
+        "occurred": { "type": "boolean" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/deviation" } },
+        "overall_impact": { "enum": ["none", "non_material", "material_non_blocking", "validity_reducing", "invalidating", "unknown"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "occurred": { "const": true } }, "required": ["occurred"] },
+          "then": { "properties": { "items": { "minItems": 1 }, "overall_impact": { "not": { "const": "none" } } } }
+        },
+        {
+          "if": { "properties": { "occurred": { "const": false } }, "required": ["occurred"] },
+          "then": { "properties": { "items": { "maxItems": 0 }, "overall_impact": { "const": "none" } } }
+        }
+      ]
+    },
+    "deviation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deviation_id", "contract_ref", "planned", "actual", "reason", "authorization", "impact", "affected_outputs", "affected_determinations", "disposition"],
+      "properties": {
+        "deviation_id": { "$ref": "#/$defs/stableId" },
+        "contract_ref": { "$ref": "#/$defs/uriOrPath" },
+        "planned": { "$ref": "#/$defs/nonEmptyString" },
+        "actual": { "$ref": "#/$defs/nonEmptyString" },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "authorization": { "enum": ["preauthorized", "approved_after", "unapproved", "emergency", "unknown"] },
+        "impact": { "enum": ["non_material", "material_non_blocking", "validity_reducing", "invalidating", "unknown"] },
+        "affected_outputs": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "affected_determinations": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "disposition": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "exceptionSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "items", "blocking"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/exception" } },
+        "blocking": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "present": { "const": true } }, "required": ["present"] },
+          "then": { "properties": { "items": { "minItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "present": { "const": false } }, "required": ["present"] },
+          "then": { "properties": { "items": { "maxItems": 0 }, "blocking": { "const": false } } }
+        }
+      ]
+    },
+    "exception": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exception_id", "type", "description", "reason", "severity", "state", "owner", "expiry_or_review_at", "effect_on_validity", "compensating_controls", "resolution_required"],
+      "properties": {
+        "exception_id": { "$ref": "#/$defs/stableId" },
+        "type": { "enum": ["waiver", "known_limitation", "policy_exception", "missing_evidence", "tool_failure", "environment_variance", "unresolved_conflict", "other"] },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "severity": { "enum": ["informational", "minor", "major", "critical"] },
+        "state": { "enum": ["open", "accepted", "mitigated", "resolved", "expired", "rejected"] },
+        "owner": { "$ref": "#/$defs/actor" },
+        "expiry_or_review_at": { "$ref": "#/$defs/timestamp" },
+        "effect_on_validity": { "enum": ["none", "reduces_confidence", "blocks_milestone", "invalidates_receipt", "unknown"] },
+        "compensating_controls": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "resolution_required": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "reproducibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "package_ref", "instructions", "independent_runs", "equivalence_criteria", "result", "known_blockers"],
+      "properties": {
+        "state": { "enum": ["not_attempted", "package_prepared", "verified_same_environment", "verified_independent_environment", "failed", "not_reproducible", "not_applicable"] },
+        "package_ref": { "oneOf": [{ "$ref": "#/$defs/artifactRef" }, { "type": "null" }] },
+        "instructions": { "$ref": "#/$defs/nonEmptyString" },
+        "independent_runs": { "type": "array", "items": { "$ref": "#/$defs/replicationRun" } },
+        "equivalence_criteria": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "result": { "$ref": "#/$defs/nonEmptyString" },
+        "known_blockers": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "enum": ["verified_same_environment", "verified_independent_environment"] } }, "required": ["state"] },
+          "then": { "properties": { "package_ref": { "$ref": "#/$defs/artifactRef" }, "independent_runs": { "minItems": 1 }, "known_blockers": { "maxItems": 0 } } }
+        },
+        {
+          "if": { "properties": { "state": { "const": "verified_independent_environment" } }, "required": ["state"] },
+          "then": {
+            "properties": {
+              "independent_runs": {
+                "contains": {
+                  "properties": {
+                    "environment_independent": { "const": true },
+                    "outcome": { "const": "equivalent" }
+                  },
+                  "required": ["environment_independent", "outcome"]
+                },
+                "minContains": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "replicationRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "executed_by", "environment_ref", "environment_independent", "outcome", "comparison", "evidence_refs"],
+      "properties": {
+        "run_id": { "$ref": "#/$defs/stableId" },
+        "executed_by": { "$ref": "#/$defs/actor" },
+        "environment_ref": { "$ref": "#/$defs/artifactRef" },
+        "environment_independent": { "type": "boolean" },
+        "outcome": { "enum": ["equivalent", "non_equivalent", "partial", "invalid"] },
+        "comparison": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "semanticValidity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall_result", "checks", "ontology_version", "unresolved_terms", "layer_boundary_statement"],
+      "properties": {
+        "overall_result": { "enum": ["pass", "fail", "warning", "not_reviewed"] },
+        "checks": {
+          "type": "array",
+          "minItems": 5,
+          "items": { "$ref": "#/$defs/semanticCheck" },
+          "allOf": [
+            { "contains": { "properties": { "check": { "const": "observation_is_non_causal" } }, "required": ["check"] } },
+            { "contains": { "properties": { "check": { "const": "interpretation_not_promoted_to_fact" } }, "required": ["check"] } },
+            { "contains": { "properties": { "check": { "const": "hypothesis_is_falsifiable" } }, "required": ["check"] } },
+            { "contains": { "properties": { "check": { "const": "measurement_claim_is_bounded" } }, "required": ["check"] } },
+            { "contains": { "properties": { "check": { "const": "support_not_equated_with_canonicality" } }, "required": ["check"] } }
+          ]
+        },
+        "ontology_version": { "$ref": "#/$defs/nonEmptyString" },
+        "unresolved_terms": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "layer_boundary_statement": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "semanticCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check", "result", "reason", "evidence_refs"],
+      "properties": {
+        "check": { "enum": ["observation_is_non_causal", "interpretation_not_promoted_to_fact", "hypothesis_is_falsifiable", "mechanism_distinct_from_appearance", "implementation_distinct_from_mechanism", "measurement_claim_is_bounded", "timing_claim_is_bounded", "support_not_equated_with_canonicality", "vocabulary_is_canonical_or_mapped", "scope_language_is_consistent", "other"] },
+        "result": { "enum": ["pass", "fail", "warning", "not_applicable"] },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall_result", "checks", "reviewers", "coverage", "unresolved_findings", "completed_at"],
+      "properties": {
+        "overall_result": { "enum": ["pass", "fail", "conditional_pass", "not_run"] },
+        "checks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/qaCheck" } },
+        "reviewers": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/actor" } },
+        "coverage": { "$ref": "#/$defs/nonEmptyString" },
+        "unresolved_findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "completed_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "overall_result": { "const": "pass" } }, "required": ["overall_result"] },
+          "then": {
+            "properties": {
+              "unresolved_findings": {
+                "not": {
+                  "contains": {
+                    "properties": {
+                      "severity": { "enum": ["major", "critical"] },
+                      "state": { "const": "open" }
+                    },
+                    "required": ["severity", "state"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "qaCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "category", "question", "method", "result", "evidence_refs", "failure_prevented"],
+      "properties": {
+        "check_id": { "$ref": "#/$defs/stableId" },
+        "category": { "enum": ["schema", "integrity", "lineage", "method", "output", "measurement", "timing", "semantic", "reproducibility", "security", "governance", "handoff", "definition_of_done"] },
+        "question": { "$ref": "#/$defs/nonEmptyString" },
+        "method": { "$ref": "#/$defs/nonEmptyString" },
+        "result": { "enum": ["pass", "fail", "warning", "not_applicable", "not_run"] },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "failure_prevented": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding_id", "severity", "description", "state", "owner", "required_action"],
+      "properties": {
+        "finding_id": { "$ref": "#/$defs/stableId" },
+        "severity": { "enum": ["informational", "minor", "major", "critical"] },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "state": { "enum": ["open", "mitigated", "resolved", "accepted"] },
+        "owner": { "$ref": "#/$defs/actor" },
+        "required_action": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "stopConditionSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluations", "blocking_triggered", "execution_stop_reason", "resume_conditions"],
+      "properties": {
+        "evaluations": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/stopCondition" } },
+        "blocking_triggered": { "type": "boolean" },
+        "execution_stop_reason": { "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }] },
+        "resume_conditions": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "blocking_triggered": { "const": true } }, "required": ["blocking_triggered"] },
+          "then": { "properties": { "execution_stop_reason": { "$ref": "#/$defs/nonEmptyString" }, "resume_conditions": { "minItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "blocking_triggered": { "const": false } }, "required": ["blocking_triggered"] },
+          "then": { "properties": { "execution_stop_reason": { "type": "null" } } }
+        }
+      ]
+    },
+    "stopCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["condition_id", "contract_ref", "condition", "triggered", "blocking", "evidence_refs", "response"],
+      "properties": {
+        "condition_id": { "$ref": "#/$defs/stableId" },
+        "contract_ref": { "$ref": "#/$defs/uriOrPath" },
+        "condition": { "$ref": "#/$defs/nonEmptyString" },
+        "triggered": { "type": "boolean" },
+        "blocking": { "type": "boolean" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "response": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["knowledge_state", "review_state", "decision_authority", "approvals", "policy_refs", "canonical_promotion_separate_from_support", "retention_class", "access_class"],
+      "properties": {
+        "knowledge_state": { "enum": ["observed", "inferred", "hypothesized", "tested", "supported", "contradicted", "inconclusive", "candidate_canonical", "canonical", "deprecated", "revoked"] },
+        "review_state": { "enum": ["not_requested", "pending", "changes_requested", "approved", "rejected"] },
+        "decision_authority": { "$ref": "#/$defs/actor" },
+        "approvals": { "type": "array", "items": { "$ref": "#/$defs/approval" } },
+        "policy_refs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/uriOrPath" } },
+        "canonical_promotion_separate_from_support": { "const": true },
+        "retention_class": { "enum": ["permanent", "long_term", "project_lifetime", "temporary", "legal_hold"] },
+        "access_class": { "enum": ["public", "internal", "restricted", "confidential"] },
+        "supersession_policy": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "knowledge_state": { "const": "candidate_canonical" } }, "required": ["knowledge_state"] },
+          "then": { "properties": { "review_state": { "enum": ["pending", "changes_requested", "approved"] } } }
+        }
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_id", "reviewer", "decision", "scope", "rationale", "decided_at"],
+      "properties": {
+        "approval_id": { "$ref": "#/$defs/stableId" },
+        "reviewer": { "$ref": "#/$defs/actor" },
+        "decision": { "enum": ["approve", "reject", "request_changes", "abstain"] },
+        "scope": { "$ref": "#/$defs/nonEmptyString" },
+        "rationale": { "$ref": "#/$defs/nonEmptyString" },
+        "decided_at": { "$ref": "#/$defs/timestamp" },
+        "signature_ref": { "$ref": "#/$defs/uriOrPath" }
+      }
+    },
+    "canonicalConsequences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "reason", "supported_determination_ids", "changes", "affected_assets", "migration_required", "rollback_plan"],
+      "properties": {
+        "disposition": { "enum": ["none", "propose", "promote", "modify", "deprecate", "revoke"] },
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "supported_determination_ids": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "changes": { "type": "array", "items": { "$ref": "#/$defs/canonicalChange" } },
+        "affected_assets": { "type": "array", "items": { "$ref": "#/$defs/stableId" } },
+        "migration_required": { "type": "boolean" },
+        "migration_plan": { "$ref": "#/$defs/nonEmptyString" },
+        "rollback_plan": { "oneOf": [{ "$ref": "#/$defs/nonEmptyString" }, { "type": "null" }] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "disposition": { "const": "none" } }, "required": ["disposition"] },
+          "then": { "properties": { "changes": { "maxItems": 0 }, "migration_required": { "const": false }, "rollback_plan": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "disposition": { "enum": ["propose", "promote", "modify", "deprecate", "revoke"] } }, "required": ["disposition"] },
+          "then": { "properties": { "supported_determination_ids": { "minItems": 1 }, "changes": { "minItems": 1 } } }
+        },
+        {
+          "if": { "properties": { "migration_required": { "const": true } }, "required": ["migration_required"] },
+          "then": { "required": ["migration_plan"] }
+        }
+      ]
+    },
+    "canonicalChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_id", "target_ref", "operation", "before", "after", "reason", "evidence_refs", "compatibility_impact"],
+      "properties": {
+        "change_id": { "$ref": "#/$defs/stableId" },
+        "target_ref": { "$ref": "#/$defs/uriOrPath" },
+        "operation": { "enum": ["add", "replace", "deprecate", "remove", "reclassify", "rename"] },
+        "before": {},
+        "after": {},
+        "reason": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceLink" } },
+        "compatibility_impact": { "enum": ["none", "backward_compatible", "migration_required", "breaking", "unknown"] }
+      }
+    },
+    "prerequisite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prerequisite_id", "criterion", "satisfied", "evidence_refs", "failure_consequence"],
+      "properties": {
+        "prerequisite_id": { "$ref": "#/$defs/stableId" },
+        "criterion": { "$ref": "#/$defs/nonEmptyString" },
+        "satisfied": { "type": "boolean" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "failure_consequence": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "milestone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["milestone_id", "name", "state", "purpose", "prerequisites", "blocking_reasons", "authorized_actions", "forbidden_actions", "unlock_evidence_refs"],
+      "properties": {
+        "milestone_id": { "$ref": "#/$defs/stableId" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "state": { "enum": ["unlocked", "blocked", "not_applicable", "pending_review"] },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "prerequisites": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/prerequisite" } },
+        "blocking_reasons": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "authorized_actions": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "forbidden_actions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "unlock_evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } }
+      },
+      "allOf": [
+        { "if": { "properties": { "state": { "const": "blocked" } }, "required": ["state"] }, "then": { "properties": { "blocking_reasons": { "minItems": 1 }, "authorized_actions": { "maxItems": 0 } } } },
+        { "if": { "properties": { "state": { "const": "unlocked" } }, "required": ["state"] }, "then": { "properties": { "unlock_evidence_refs": { "minItems": 1 }, "authorized_actions": { "minItems": 1 } } } }
+      ]
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["destination_stage", "destination_owner", "purpose", "required_artifacts", "trusted_assertions", "must_verify", "must_not_infer", "open_questions", "known_risks", "acceptance_criteria", "rejection_conditions", "first_action", "handoff_status"],
+      "properties": {
+        "destination_stage": { "$ref": "#/$defs/nonEmptyString" },
+        "destination_owner": { "$ref": "#/$defs/actor" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "required_artifacts": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/artifactRef" } },
+        "trusted_assertions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/trustAssertion" } },
+        "must_verify": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "must_not_infer": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "open_questions": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "known_risks": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "acceptance_criteria": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "rejection_conditions": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "first_action": { "$ref": "#/$defs/nonEmptyString" },
+        "handoff_status": { "enum": ["ready", "ready_with_conditions", "blocked", "accepted", "rejected"] }
+      },
+      "description": "The explicit trust boundary between stages. It prevents downstream consumers from having to rediscover completed work while forbidding them from silently extending claims beyond the receipt."
+    },
+    "trustAssertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assertion", "determination_ids", "scope", "confidence", "expiry_or_revalidation_condition"],
+      "properties": {
+        "assertion": { "$ref": "#/$defs/nonEmptyString" },
+        "determination_ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/stableId" } },
+        "scope": { "$ref": "#/$defs/nonEmptyString" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "expiry_or_revalidation_condition": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "definition_of_done_met", "completeness_checks", "invalidity_conditions_evaluated", "blocking_defects", "validity_statement", "assessed_by", "assessed_at"],
+      "properties": {
+        "state": { "enum": ["valid", "conditionally_valid", "incomplete", "invalid", "not_assessed"] },
+        "definition_of_done_met": { "type": "boolean" },
+        "completeness_checks": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/checkResult" } },
+        "invalidity_conditions_evaluated": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/invalidityEvaluation" } },
+        "blocking_defects": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "validity_statement": { "$ref": "#/$defs/nonEmptyString" },
+        "assessed_by": { "$ref": "#/$defs/actor" },
+        "assessed_at": { "$ref": "#/$defs/timestamp" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "valid" } }, "required": ["state"] },
+          "then": { "properties": { "definition_of_done_met": { "const": true }, "blocking_defects": { "maxItems": 0 }, "invalidity_conditions_evaluated": { "not": { "contains": { "properties": { "triggered": { "const": true } }, "required": ["triggered"] } } } } }
+        },
+        {
+          "if": { "properties": { "state": { "enum": ["incomplete", "invalid"] } }, "required": ["state"] },
+          "then": { "properties": { "definition_of_done_met": { "const": false }, "blocking_defects": { "minItems": 1 } } }
+        }
+      ]
+    },
+    "invalidityEvaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["condition", "triggered", "evidence_refs", "consequence"],
+      "properties": {
+        "condition": { "$ref": "#/$defs/nonEmptyString" },
+        "triggered": { "type": "boolean" },
+        "evidence_refs": { "type": "array", "items": { "$ref": "#/$defs/evidenceLink" } },
+        "consequence": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attestation_id", "actor", "statement", "scope", "signed_at", "signature"],
+      "properties": {
+        "attestation_id": { "$ref": "#/$defs/stableId" },
+        "actor": { "$ref": "#/$defs/actor" },
+        "statement": { "$ref": "#/$defs/nonEmptyString" },
+        "scope": { "$ref": "#/$defs/nonEmptyString" },
+        "signed_at": { "$ref": "#/$defs/timestamp" },
+        "signature": { "$ref": "#/$defs/nonEmptyString" },
+        "verification_method": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    }
+  }
+}
