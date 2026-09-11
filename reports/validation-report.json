@@ -1,11 +1,17 @@
 {
   "version": "0.1.0",
   "generatedAt": "2026-09-11T11:12:57.565Z",
+  "generatedAt": "2026-09-11T10:46:08.395Z",
   "passed": true,
   "specimenCount": 12,
   "operatorCount": 13,
   "recipeCount": 12,
   "findings": [
+    {
+      "level": "info",
+      "code": "receipt-negative-control",
+      "message": "The experiment receipt schema compiled and rejected an empty receipt as required."
+    },
     {
       "level": "info",
       "code": "positive-control",
@@ -127,6 +133,7 @@
     "allSpecimensPresent": true,
     "everyOperatorReused": true,
     "negativeControlRejected": true,
-    "positiveControlAccepted": true
+    "positiveControlAccepted": true,
+    "experimentReceiptSchemaValid": true
   }
 }

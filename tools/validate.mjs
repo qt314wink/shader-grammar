@@ -11,6 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
 import { parse as parseYaml } from "yaml";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -75,6 +76,7 @@ function loadAjv(schemas) {
     strict: false,
     validateSchema: true,
   });
+  addFormats(ajv);
   for (const schema of schemas) ajv.addSchema(schema);
   return ajv;
 }
@@ -83,6 +85,7 @@ const parameterSchema = readJson("schemas/parameter.schema.json");
 const fieldSchema = readJson("schemas/field.schema.json");
 const operatorSchema = readJson("schemas/operator.schema.json");
 const recipeSchema = readJson("schemas/recipe.schema.json");
+const experimentReceiptSchema = readJson("schemas/experiment-receipt.schema.json");
 const operators = readJson("catalog/operators.json");
 const taxonomy = readYaml("taxonomy/material-taxonomy.yaml");
 
@@ -98,16 +101,41 @@ const recipes = recipeFiles.map((f) => ({
 const validExample = readJson("examples/valid/minimal-thin-film.json");
 const invalidExample = readJson("examples/invalid/named-effect.json");
 
-const ajv = loadAjv([parameterSchema, fieldSchema, operatorSchema, recipeSchema]);
+const ajv = loadAjv([
+  parameterSchema,
+  fieldSchema,
+  operatorSchema,
+  recipeSchema,
+  experimentReceiptSchema,
+]);
 const validateOperator = ajv.getSchema(operatorSchema.$id);
 const validateRecipe = ajv.getSchema(recipeSchema.$id);
 const validateField = ajv.getSchema(fieldSchema.$id);
 const validateParameter = ajv.getSchema(parameterSchema.$id);
+const validateExperimentReceipt = ajv.getSchema(experimentReceiptSchema.$id);
 
-if (!validateOperator || !validateRecipe || !validateField || !validateParameter) {
+if (
+  !validateOperator ||
+  !validateRecipe ||
+  !validateField ||
+  !validateParameter ||
+  !validateExperimentReceipt
+) {
   fail("schema-compile", "Failed to compile one or more schemas.", {
     errors: ajv.errors,
   });
+}
+
+if (validateExperimentReceipt && validateExperimentReceipt({})) {
+  fail(
+    "receipt-negative-control",
+    "The experiment receipt schema accepted an empty receipt.",
+  );
+} else if (validateExperimentReceipt) {
+  note(
+    "receipt-negative-control",
+    "The experiment receipt schema compiled and rejected an empty receipt as required.",
+  );
 }
 
 const operatorById = new Map();
@@ -329,6 +357,8 @@ const report = {
     everyOperatorReused: singletons.length === 0 && unused.length === 0,
     negativeControlRejected: invalidFails.length > 0,
     positiveControlAccepted: validFails.length === 0,
+    experimentReceiptSchemaValid:
+      Boolean(validateExperimentReceipt) && !validateExperimentReceipt({}),
   },
 };
 
@@ -361,6 +391,7 @@ Generated ${report.generatedAt}
 | Every operator reused (≥2 specimens) | ${report.criteria.everyOperatorReused ? "pass" : "fail"} |
 | Negative control rejected | ${report.criteria.negativeControlRejected ? "pass" : "fail"} |
 | Positive control accepted | ${report.criteria.positiveControlAccepted ? "pass" : "fail"} |
+| Experiment receipt schema + empty-receipt negative control | ${report.criteria.experimentReceiptSchemaValid ? "pass" : "fail"} |
 
 ## Coverage matrix
 

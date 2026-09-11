@@ -1,6 +1,7 @@
 # Shader Grammar v0.1 — validation report
 
 Generated 2026-09-11T11:12:57.565Z
+Generated 2026-09-11T10:46:08.395Z
 
 **Result: PASS**
 
@@ -14,6 +15,7 @@ Generated 2026-09-11T11:12:57.565Z
 | Every operator reused (≥2 specimens) | pass |
 | Negative control rejected | pass |
 | Positive control accepted | pass |
+| Experiment receipt schema + empty-receipt negative control | pass |
 
 ## Coverage matrix
 
@@ -52,6 +54,7 @@ Rows are specimens. Columns are catalog operators. A mark means the recipe binds
 
 ## Findings
 
+- **info** `receipt-negative-control`: The experiment receipt schema compiled and rejected an empty receipt as required.
 - **info** `positive-control`: examples/valid/minimal-thin-film.json passed.
 - **info** `negative-control`: examples/invalid/named-effect.json was rejected as required.
 - **info** `reuse`: Every catalog operator is used by at least two specimens.
