@@ -1,0 +1,7 @@
+{
+  "fixture_type": "mutation",
+  "base_fixture": "examples/valid/minimal-experiment-receipt.json",
+  "description": "Promote the bounded observation to supported while removing the required executed-test evidence.",
+  "mutations": { "determinations.0.epistemic_state": "supported", "determinations.0.evidence_refs": [], "determinations.0.test_execution": null, "determinations.0.alternative_hypothesis_ids": [] },
+  "expected_error": "determination requires test execution, evidence, falsification assessment, alternatives, and supported confidence"
+}

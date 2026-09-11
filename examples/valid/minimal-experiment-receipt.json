@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "receipt-minimal-001",
+  "receipt_status": "incomplete",
+  "experiment_identity": {
+    "experiment_id": "experiment-minimal-001",
+    "contract_ref": { "artifact_id": "contract-minimal-001", "kind": "experiment_contract", "role": "pre-run contract", "locator": "contracts/minimal.json", "persistence": "immutable", "integrity": { "algorithm": "sha256", "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" } },
+    "run_id": "run-minimal-001",
+    "run_attempt": 1,
+    "started_at": "2026-09-11T12:00:00Z",
+    "ended_at": "2026-09-11T12:00:10Z",
+    "purpose": "Verify receipt handoff semantics for one controlled reconstruction.",
+    "research_question": "Can a bounded observation be handed to the next stage without claiming mechanism causality?",
+    "execution_mode": "preregistered"
+  },
+  "provenance": {
+    "recorded_by": { "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" },
+    "executed_by": [{ "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" }],
+    "recorded_at": "2026-09-11T12:01:00Z",
+    "source_chain": [{ "artifact_id": "source-minimal-001", "kind": "image", "role": "authoritative reference", "locator": "evidence/reference.png", "persistence": "immutable", "integrity": { "algorithm": "sha256", "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" } }],
+    "custody_statement": "Reference and derived artifacts were retained in the experiment workspace.",
+    "rights_and_policy": { "status": "declared", "permitted_uses": ["research"], "restrictions": [] }
+  },
+  "scope": {
+    "in_scope": ["global composition", "bounded observation"],
+    "out_of_scope": ["physical source attribution", "canonical grammar changes"],
+    "anti_questions": ["What named material is this?", "What mechanism is proven by appearance alone?"],
+    "unit_of_analysis": "single still image",
+    "validity_domain": "the supplied reference and this run configuration",
+    "generalization_boundary": "No claim beyond this reference is authorized.",
+    "known_confounders": ["compression", "unknown lighting"]
+  },
+  "inputs": [{
+    "artifact": { "artifact_id": "source-minimal-001", "kind": "image", "role": "authoritative reference", "locator": "evidence/reference.png", "persistence": "immutable", "integrity": { "algorithm": "sha256", "value": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" } },
+    "authoritativeness": "authoritative",
+    "used_as": "visual reference",
+    "selection_reason": "Declared by the experiment contract.",
+    "preprocessing": [],
+    "suitability": { "status": "conditionally_suitable", "questions_supported": ["global composition"], "questions_not_supported": ["micro-surface causality"], "reason": "Resolution and provenance limit fine-grained inference." }
+  }],
+  "action": {
+    "planned_method_ref": "contracts/minimal.json#/method",
+    "actual_steps": [{
+      "step_id": "step-observe-001",
+      "sequence": 1,
+      "action": "Describe visible radial organization.",
+      "intention": "Record a non-causal observation before proposing a mechanism.",
+      "executor": { "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" },
+      "started_at": "2026-09-11T12:00:01Z",
+      "ended_at": "2026-09-11T12:00:05Z",
+      "status": "passed",
+      "input_ids": ["source-minimal-001"],
+      "output_ids": ["observation-minimal-001"],
+      "command_or_procedure": "Visual inspection against the preregistered observation rubric.",
+      "evidence_refs": [{ "evidence_id": "source-minimal-001", "locator": "evidence/reference.png", "supports": "Visible radial organization.", "admissibility": "direct", "falsification_relevance": "A counterexample would remove the observation." }]
+    }],
+    "environment": {
+      "operating_system": "Windows",
+      "hardware": ["desktop workstation"],
+      "runtime": [{ "name": "receipt-validator", "version": "1.0" }],
+      "dependencies": [],
+      "locale": "en-US",
+      "clock": "UTC system clock",
+      "randomness": { "policy": "not_applicable", "sources": [], "seeds": [] }
+    },
+    "controls_executed": [],
+    "execution_outcome": "completed_as_planned",
+    "failure_log": []
+  },
+  "outputs": [{
+    "output_id": "observation-minimal-001",
+    "expected": true,
+    "status": "produced",
+    "purpose": "Machine-readable bounded observation.",
+    "artifact": { "artifact_id": "observation-minimal-001", "kind": "observation_record", "role": "descriptive observation", "locator": "observations/minimal.json", "persistence": "versioned", "integrity": { "algorithm": "sha256", "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } },
+    "acceptance_checks": [{ "check_id": "check-observation-001", "criterion": "Observation is descriptive and non-causal.", "result": "pass", "actual": "Passed", "evidence_refs": [{ "evidence_id": "source-minimal-001", "locator": "evidence/reference.png", "supports": "Observation", "admissibility": "direct", "falsification_relevance": "Direct visual counterexample." }] }],
+    "downstream_use": "Input to a later hypothesis stage; not proof of mechanism."
+  }],
+  "measurements": { "applicability": "not_applicable", "reason": "This first receipt tests semantic handoff, not metric fitting.", "executions": [], "coverage_assessment": "No quantitative measurement was required." },
+  "timing": { "applicability": "not_applicable", "reason": "The reference is a still image and no temporal claim is made.", "contract_ref": null, "observation_window": null, "sampling": null, "sufficiency": "not_applicable", "clock_and_sync": null, "timing_risks": ["A still image cannot establish animation behavior."] },
+  "determinations": [{
+    "determination_id": "determination-observed-001",
+    "claim": "The reference contains visible radial organization.",
+    "subject": "source-minimal-001",
+    "predicate": "exhibits",
+    "object": "radial organization",
+    "epistemic_state": "observed",
+    "scope": "This single reference image.",
+    "basis": "direct_observation",
+    "evidence_refs": [{ "evidence_id": "source-minimal-001", "locator": "evidence/reference.png", "supports": "Visible radial organization.", "admissibility": "direct", "falsification_relevance": "A contradictory crop or inspection would falsify it." }],
+    "test_execution": null,
+    "falsification": { "assessed": true, "falsifier": "The apparent organization is an artifact of framing or compression.", "observed": false, "result": "not_falsified", "residual_risk": "Low-resolution artifacts remain possible." },
+    "confidence": { "level": "moderate", "score": 0.7, "method": "bounded visual rubric", "calibration_basis": "Direct inspection with known compression limitation." },
+    "uncertainty": "The observation does not identify a generating mechanism.",
+    "limitations": ["Single-view evidence.", "Unknown lighting and compression."],
+    "prohibited_inferences": ["Do not infer angular repetition or a named material."],
+    "alternative_hypothesis_ids": ["hypothesis-framing-001"],
+    "downstream_trust": "The next stage may use this as a descriptive observation only."
+  }],
+  "uncertainty": { "overall_level": "moderate", "sources": [{ "source": "compression and unknown lighting", "type": "input", "magnitude": "moderate", "affected_claim_ids": ["determination-observed-001"], "mitigation": "Retain the original and test against higher-quality evidence later." }], "propagation": "Limits causal and micro-scale conclusions.", "decision_sensitivity": "A mechanism-selection decision would be highly sensitive.", "reduction_plan": ["Acquire higher-quality evidence.", "Run a distinguishing experiment."], "no_alternative_hypothesis_reason": null },
+  "alternative_hypotheses": [{ "hypothesis_id": "hypothesis-framing-001", "statement": "The radial organization may be introduced by framing or capture rather than the underlying visual process.", "status": "live", "plausibility": { "level": "moderate", "score": 0.4, "method": "confounder review", "calibration_basis": "Camera and lighting are unknown." }, "distinguishing_test": "Repeat observation with controlled framing and lighting.", "supporting_evidence_refs": [], "contradicting_evidence_refs": [], "why_not_selected": "This run did not test capture confounds.", "next_action": "Test during mechanism inference." }],
+  "deviations": { "occurred": false, "items": [], "overall_impact": "none" },
+  "exceptions": { "present": false, "items": [], "blocking": false },
+  "reproducibility": { "state": "package_prepared", "package_ref": null, "instructions": "Repeat the observation rubric against the retained reference artifact.", "independent_runs": [], "equivalence_criteria": ["Same bounded observation under the same evidence scope."], "result": "Not independently rerun.", "known_blockers": ["Independent environment not yet tested."] },
+  "semantic_validity": {
+    "overall_result": "pass",
+    "checks": [
+      { "check": "observation_is_non_causal", "result": "pass", "reason": "The determination describes appearance only.", "evidence_refs": [{ "evidence_id": "source-minimal-001", "locator": "evidence/reference.png", "supports": "Observation", "admissibility": "direct", "falsification_relevance": "Visual counterexample." }] },
+      { "check": "interpretation_not_promoted_to_fact", "result": "pass", "reason": "No interpretation is presented as fact.", "evidence_refs": [] },
+      { "check": "hypothesis_is_falsifiable", "result": "pass", "reason": "The alternative names a distinguishing test.", "evidence_refs": [] },
+      { "check": "measurement_claim_is_bounded", "result": "pass", "reason": "No quantitative measurement is claimed.", "evidence_refs": [] },
+      { "check": "support_not_equated_with_canonicality", "result": "pass", "reason": "Governance remains observed and canonical consequences are none.", "evidence_refs": [] }
+    ],
+    "ontology_version": "shader-grammar-v0.1",
+    "unresolved_terms": [],
+    "layer_boundary_statement": "Observation is not interpretation, hypothesis, mechanism, implementation, or canonical knowledge."
+  },
+  "qa": { "overall_result": "pass", "checks": [{ "check_id": "qa-receipt-001", "category": "semantic", "question": "Is the observation non-causal?", "method": "Layer-boundary review.", "result": "pass", "evidence_refs": [], "failure_prevented": "Causal overclaim." }], "reviewers": [{ "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" }], "coverage": "Minimal semantic handoff coverage.", "unresolved_findings": [], "completed_at": "2026-09-11T12:02:00Z" },
+  "stop_conditions": { "evaluations": [{ "condition_id": "stop-no-causal-proof-001", "contract_ref": "contracts/minimal.json#/stop_conditions/no_causal_proof", "condition": "Stop before causal mechanism attribution.", "triggered": false, "blocking": true, "evidence_refs": [], "response": "Remain at observation state." }], "blocking_triggered": false, "execution_stop_reason": null, "resume_conditions": ["A falsifiable mechanism experiment is preregistered."] },
+  "governance": { "knowledge_state": "observed", "review_state": "approved", "decision_authority": { "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" }, "approvals": [{ "approval_id": "approval-minimal-001", "reviewer": { "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" }, "decision": "approve", "scope": "Receipt semantic validity only.", "rationale": "The receipt stays within observation scope.", "decided_at": "2026-09-11T12:02:00Z" }], "policy_refs": ["docs/STATUS.md"], "canonical_promotion_separate_from_support": true, "retention_class": "long_term", "access_class": "internal" },
+  "canonical_consequences": { "disposition": "none", "reason": "Observation does not alter canonical grammar.", "supported_determination_ids": [], "changes": [], "affected_assets": [], "migration_required": false, "rollback_plan": null },
+  "next_milestone": { "milestone_id": "milestone-hypothesis-001", "name": "Bounded mechanism hypothesis", "state": "pending_review", "purpose": "Prepare a falsifiable mechanism test without claiming it is proven.", "prerequisites": [{ "prerequisite_id": "prereq-observation-001", "criterion": "Observation receipt passes semantic QA.", "satisfied": true, "evidence_refs": [], "failure_consequence": "Remain blocked at observation." }], "blocking_reasons": ["Mechanism test has not been preregistered."], "authorized_actions": ["Draft a competing-hypothesis experiment contract."], "forbidden_actions": ["Promote an explanation to canonical knowledge."], "unlock_evidence_refs": [] },
+  "handoff": { "destination_stage": "mechanism hypothesis", "destination_owner": { "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" }, "purpose": "Pass a bounded descriptive observation into hypothesis design.", "required_artifacts": [{ "artifact_id": "observation-minimal-001", "kind": "observation_record", "role": "descriptive observation", "locator": "observations/minimal.json", "persistence": "versioned", "integrity": { "algorithm": "sha256", "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } }], "trusted_assertions": [{ "assertion": "Radial organization is visibly present in the supplied image.", "determination_ids": ["determination-observed-001"], "scope": "Single supplied reference.", "confidence": { "level": "moderate", "score": 0.7, "method": "bounded visual rubric", "calibration_basis": "Direct inspection." }, "expiry_or_revalidation_condition": "Revalidate if the source artifact changes." }], "must_verify": ["Test capture confounds before causal inference."], "must_not_infer": ["Do not infer angular repetition or named material."], "open_questions": ["Which mechanisms can explain the observation?"], "known_risks": ["Capture confounds."], "acceptance_criteria": ["A future contract names competing, falsifiable hypotheses."], "rejection_conditions": ["Any downstream claim treats observation as mechanism proof."], "first_action": "Write a pre-run experiment contract with a distinguishing test.", "handoff_status": "ready_with_conditions" },
+  "validity": { "state": "conditionally_valid", "definition_of_done_met": false, "completeness_checks": [{ "check_id": "validity-check-001", "criterion": "Receipt is complete for bounded observation handoff.", "result": "pass", "actual": "Pass with reproducibility limitation.", "evidence_refs": [] }], "invalidity_conditions_evaluated": [{ "condition": "Observation makes a causal claim.", "triggered": false, "evidence_refs": [], "consequence": "Would invalidate the receipt if triggered." }], "blocking_defects": ["Independent reproduction has not been run."], "validity_statement": "Conditionally valid for the bounded observation handoff only.", "assessed_by": { "actor_id": "actor-jennipher", "actor_type": "human", "role": "researcher" }, "assessed_at": "2026-09-11T12:02:00Z" },
+  "created_at": "2026-09-11T12:02:00Z"
+}
