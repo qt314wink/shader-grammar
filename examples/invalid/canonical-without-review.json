@@ -1,0 +1,7 @@
+{
+  "fixture_type": "mutation",
+  "base_fixture": "examples/valid/minimal-experiment-receipt.json",
+  "description": "Claim canonical governance without independent reproducibility, approval, or canonical consequences.",
+  "mutations": { "governance.knowledge_state": "canonical", "governance.review_state": "pending", "reproducibility.state": "package_prepared", "canonical_consequences.disposition": "none" },
+  "expected_error": "canonical state requires complete receipt, verified reproducibility, approved review, and explicit consequences"
+}

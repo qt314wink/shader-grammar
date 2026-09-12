@@ -1,0 +1,7 @@
+{
+  "fixture_type": "mutation",
+  "base_fixture": "examples/valid/minimal-experiment-receipt.json",
+  "description": "Unlock a milestone while retaining a blocking reason and an unsatisfied prerequisite.",
+  "mutations": { "receipt_status": "complete", "next_milestone.state": "unlocked", "next_milestone.prerequisites.0.satisfied": false, "next_milestone.blocking_reasons": ["Mechanism test has not been preregistered."], "validity.state": "valid", "validity.definition_of_done_met": true },
+  "expected_error": "unlocked milestone requires satisfied prerequisites and no blocking reasons"
+}

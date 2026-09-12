@@ -46,6 +46,8 @@ catalog/operators.json          closed set of 13 operators
 recipes/*.json                  12 specimen recipes
 examples/valid/                 positive control
 examples/invalid/               named-effect trap (must fail)
+examples/valid/minimal-experiment-receipt.json
+examples/invalid/*receipt*.json receipt conditional-gate controls
 examples/illustrative/          GLSL/WGSL thin-film reference snippets (not a renderer)
 docs/ontology-gaps.md
 reports/validation-report.md    generated
@@ -79,6 +81,10 @@ The gate is stronger than schema-valid:
 6. The named-effect anti-example is rejected.
 7. The minimal thin-film example is accepted.
 8. The experiment receipt contract compiles under JSON Schema Draft 2020-12 and rejects an empty receipt.
+
+The receipt fixture gate also accepts the minimal bounded-observation receipt and
+rejects unsupported transitions to `supported`, `canonical`, and `unlocked`
+when their evidence or governance prerequisites are missing.
 
 ## Experiment receipts
 

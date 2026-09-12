@@ -56,6 +56,14 @@ function readYaml(rel) {
   return parseYaml(fs.readFileSync(path.join(ROOT, rel), "utf8"));
 }
 
+function setPath(value, dottedPath, replacement) {
+  const segments = dottedPath.split(".");
+  const leaf = segments.pop();
+  let cursor = value;
+  for (const segment of segments) cursor = cursor[segment];
+  cursor[leaf] = replacement;
+}
+
 function collectKeys(value, acc = []) {
   if (Array.isArray(value)) {
     for (const item of value) collectKeys(item, acc);
@@ -136,6 +144,40 @@ if (validateExperimentReceipt && validateExperimentReceipt({})) {
     "receipt-negative-control",
     "The experiment receipt schema compiled and rejected an empty receipt as required.",
   );
+}
+
+const receiptFixture = readJson("examples/valid/minimal-experiment-receipt.json");
+if (validateExperimentReceipt && !validateExperimentReceipt(receiptFixture)) {
+  fail("receipt-positive-control", "The minimal experiment receipt fixture failed schema validation.", {
+    errors: validateExperimentReceipt.errors,
+  });
+} else if (validateExperimentReceipt) {
+  note("receipt-positive-control", "The minimal experiment receipt fixture passed.");
+}
+
+const receiptMutationFiles = [
+  "examples/invalid/supported-without-evidence.json",
+  "examples/invalid/canonical-without-review.json",
+  "examples/invalid/unlocked-milestone-with-blocker.json",
+];
+const receiptMutationResults = [];
+for (const file of receiptMutationFiles) {
+  const descriptor = readJson(file);
+  const mutated = structuredClone(receiptFixture);
+  for (const [dottedPath, replacement] of Object.entries(descriptor.mutations ?? {})) {
+    setPath(mutated, dottedPath, replacement);
+  }
+  const accepted = validateExperimentReceipt ? validateExperimentReceipt(mutated) : false;
+  receiptMutationResults.push({ file, rejected: !accepted });
+  if (accepted) {
+    fail("receipt-negative-control", `${file} was accepted but must be rejected.`, {
+      expected: descriptor.expected_error,
+    });
+  } else {
+    note("receipt-negative-control", `${file} was rejected as required.`, {
+      expected: descriptor.expected_error,
+    });
+  }
 }
 
 const operatorById = new Map();
@@ -359,6 +401,11 @@ const report = {
     positiveControlAccepted: validFails.length === 0,
     experimentReceiptSchemaValid:
       Boolean(validateExperimentReceipt) && !validateExperimentReceipt({}),
+    experimentReceiptPositiveControl:
+      Boolean(validateExperimentReceipt) && validateExperimentReceipt(receiptFixture),
+    experimentReceiptNegativeControls:
+      receiptMutationResults.length === receiptMutationFiles.length &&
+      receiptMutationResults.every((result) => result.rejected),
   },
 };
 
@@ -392,6 +439,8 @@ Generated ${report.generatedAt}
 | Negative control rejected | ${report.criteria.negativeControlRejected ? "pass" : "fail"} |
 | Positive control accepted | ${report.criteria.positiveControlAccepted ? "pass" : "fail"} |
 | Experiment receipt schema + empty-receipt negative control | ${report.criteria.experimentReceiptSchemaValid ? "pass" : "fail"} |
+| Minimal experiment receipt positive control | ${report.criteria.experimentReceiptPositiveControl ? "pass" : "fail"} |
+| Receipt conditional negative controls (3) | ${report.criteria.experimentReceiptNegativeControls ? "pass" : "fail"} |
 
 ## Coverage matrix
 
