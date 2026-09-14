@@ -1,0 +1,34 @@
+{
+  "contract_id": "contract-controlled-thin-film-001",
+  "title": "Controlled normal-incidence thin-film spectral reconstruction",
+  "purpose": "Exercise one complete evidence-to-reconstruction-to-receipt path using a deterministic, typed Shader Grammar primitive.",
+  "research_question": "Given a persisted normal-incidence reflectance spectrum, can the thin-film model recover the film thickness more accurately than a flat-spectrum alternative?",
+  "scope": {
+    "in_scope": ["normal-incidence two-interface dielectric film", "D65-labelled spectral sample grid", "film thickness fit"],
+    "out_of_scope": ["photographic inverse rendering", "unknown lighting", "camera response", "polarization", "off-normal incidence", "canonical grammar change"],
+    "anti_questions": ["Does this establish the source mechanism of a photograph?", "Does this validate a real-time GLSL implementation?"]
+  },
+  "hypotheses": [
+    {
+      "id": "hypothesis-film-001",
+      "statement": "A two-interface thin-film model with fixed IORs can recover thickness from the reference spectrum.",
+      "falsifier": "The best-fitting thickness does not materially improve MSE over the flat-spectrum baseline."
+    },
+    {
+      "id": "hypothesis-flat-001",
+      "statement": "A constant reflectance model is adequate for the reference spectrum.",
+      "falsifier": "The fitted thin-film model materially lowers MSE relative to the best constant reflectance."
+    }
+  ],
+  "method": [
+    "Read the immutable reference spectrum without using its generation parameters.",
+    "Evaluate 1 nm thickness candidates from 100 nm through 600 nm using the two-interface normal-incidence reflectance equation.",
+    "Select the candidate with minimum mean squared spectral error.",
+    "Compare its error to the least-squares constant-reflectance baseline.",
+    "Repeat the deterministic fit in the same environment and record equivalence.",
+    "Emit a schema-valid experiment receipt with all bounded conclusions and prohibited inferences."
+  ],
+  "success_criterion": "Fitted thin-film MSE is at least 100 times smaller than flat-spectrum MSE and the same-environment replication returns the same thickness and MSE.",
+  "failure_criterion": "The fit is not materially better than the flat baseline, has no unique minimum, or cannot be reproduced in a second run.",
+  "stop_conditions": ["Do not infer real-world material identity.", "Do not promote the result to canonical grammar knowledge.", "Stop if the persisted reference digest does not match the contract input."]
+}

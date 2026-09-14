@@ -1,0 +1,143 @@
+{
+  "artifact_id": "evidence-controlled-thin-film-spectrum-001",
+  "kind": "controlled_reference_spectrum",
+  "method": "normal-incidence two-interface dielectric-film reflectance",
+  "wavelength_unit": "nm",
+  "samples": [
+    {
+      "wavelength_nm": 400,
+      "reflectance": 0.028965881692373716
+    },
+    {
+      "wavelength_nm": 410,
+      "reflectance": 0.02599940333741963
+    },
+    {
+      "wavelength_nm": 420,
+      "reflectance": 0.023353154170680634
+    },
+    {
+      "wavelength_nm": 430,
+      "reflectance": 0.02115706348228004
+    },
+    {
+      "wavelength_nm": 440,
+      "reflectance": 0.019485026037178235
+    },
+    {
+      "wavelength_nm": 450,
+      "reflectance": 0.018363512763953812
+    },
+    {
+      "wavelength_nm": 460,
+      "reflectance": 0.017781538161771852
+    },
+    {
+      "wavelength_nm": 470,
+      "reflectance": 0.01770067060655429
+    },
+    {
+      "wavelength_nm": 480,
+      "reflectance": 0.018064205636302084
+    },
+    {
+      "wavelength_nm": 490,
+      "reflectance": 0.018804997175798813
+    },
+    {
+      "wavelength_nm": 500,
+      "reflectance": 0.01985173904809706
+    },
+    {
+      "wavelength_nm": 510,
+      "reflectance": 0.02113370293739073
+    },
+    {
+      "wavelength_nm": 520,
+      "reflectance": 0.022584074894433395
+    },
+    {
+      "wavelength_nm": 530,
+      "reflectance": 0.024142103968007117
+    },
+    {
+      "wavelength_nm": 540,
+      "reflectance": 0.025754300227231953
+    },
+    {
+      "wavelength_nm": 550,
+      "reflectance": 0.027374911457627785
+    },
+    {
+      "wavelength_nm": 560,
+      "reflectance": 0.028965881692373754
+    },
+    {
+      "wavelength_nm": 570,
+      "reflectance": 0.030496460568733084
+    },
+    {
+      "wavelength_nm": 580,
+      "reflectance": 0.0319425970353201
+    },
+    {
+      "wavelength_nm": 590,
+      "reflectance": 0.03328621817944333
+    },
+    {
+      "wavelength_nm": 600,
+      "reflectance": 0.03451446586319005
+    },
+    {
+      "wavelength_nm": 610,
+      "reflectance": 0.035618941065661595
+    },
+    {
+      "wavelength_nm": 620,
+      "reflectance": 0.0365949881306502
+    },
+    {
+      "wavelength_nm": 630,
+      "reflectance": 0.03744103790148622
+    },
+    {
+      "wavelength_nm": 640,
+      "reflectance": 0.03815801921730945
+    },
+    {
+      "wavelength_nm": 650,
+      "reflectance": 0.038748841673435994
+    },
+    {
+      "wavelength_nm": 660,
+      "reflectance": 0.03921794821573723
+    },
+    {
+      "wavelength_nm": 670,
+      "reflectance": 0.03957093345855687
+    },
+    {
+      "wavelength_nm": 680,
+      "reflectance": 0.039814222117267574
+    },
+    {
+      "wavelength_nm": 690,
+      "reflectance": 0.039954801266434296
+    },
+    {
+      "wavelength_nm": 700,
+      "reflectance": 0.039999999999999994
+    }
+  ],
+  "provenance": {
+    "source": "deterministic controlled benchmark",
+    "generation_parameters_disclosed_for_audit": {
+      "nIncident": 1,
+      "nFilm": 1.4,
+      "nExit": 1.5,
+      "thicknessNm": 250
+    },
+    "caution": "This is a controlled benchmark, not a photograph or a claim about real-world material identity."
+  },
+  "sha256": "9c3911c690e25d16bfce357ffcd955e5b58ffdcc019a1167f660ff06f67b87e2"
+}
