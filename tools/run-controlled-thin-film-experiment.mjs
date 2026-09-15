@@ -11,7 +11,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const EXPERIMENT_DIR = path.join(ROOT, "experiments/controlled-thin-film");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(ROOT, relative), "utf8"));
 const writeJson = (relative, value) => fs.writeFileSync(path.join(ROOT, relative), `${JSON.stringify(value, null, 2)}\n`);
-const sha256File = (relative) => crypto.createHash("sha256").update(fs.readFileSync(path.join(ROOT, relative))).digest("hex");
+const sha256File = (relative) => crypto.createHash("sha256")
+  .update(fs.readFileSync(path.join(ROOT, relative), "utf8").replaceAll("\r\n", "\n"))
+  .digest("hex");
 
 function reflectance({ nIncident, nFilm, nExit, thicknessNm }, wavelengthNm) {
   const r01 = (nIncident - nFilm) / (nIncident + nFilm);

@@ -12,7 +12,7 @@
       "persistence": "immutable",
       "integrity": {
         "algorithm": "sha256",
-        "value": "deebf230ee52d35510db579114d8225c59384e3a6995fb038ca7f478d7816db8"
+        "value": "512108783dce2a12a0a7c576f69e7f32771b62a15dff595b3d707ae1d1667c3e"
       }
     },
     "run_id": "fixture-controlled-thin-film-001",
@@ -131,7 +131,7 @@
         "persistence": "immutable",
         "integrity": {
           "algorithm": "sha256",
-          "value": "933d16720f2cde637fd5e06b8aa43a52513ea98ba35af22533ab9eb2e950acc7"
+          "value": "d5ed26107a395407f50a10ddd2c409f90036bd0a4cceaa720a1740b003c00407"
         }
       },
       "authoritativeness": "supporting",
@@ -271,7 +271,7 @@
         "persistence": "immutable",
         "integrity": {
           "algorithm": "sha256",
-          "value": "d2c5833b452f83bb4b00bec4f9e9ef312fa14caa884e23c7c350ee9c9802acb2"
+          "value": "57b5d4d85591c55706ae001899bf5505167b4692d8882fd8b740cbb5a3c338aa"
         }
       }
     },
@@ -586,7 +586,7 @@
       "persistence": "immutable",
       "integrity": {
         "algorithm": "sha256",
-        "value": "d2c5833b452f83bb4b00bec4f9e9ef312fa14caa884e23c7c350ee9c9802acb2"
+        "value": "57b5d4d85591c55706ae001899bf5505167b4692d8882fd8b740cbb5a3c338aa"
       }
     },
     "instructions": "Run the generator once, then run the controlled experiment script with the persisted reference file.",
@@ -606,7 +606,7 @@
           "persistence": "immutable",
           "integrity": {
             "algorithm": "sha256",
-            "value": "c822a8c3700304d1628b418887dfaf9a48786540acb8d26ed777e564f38d9dd7"
+            "value": "1e35f51a780b7da36cb0e7152d9e18ae1877a24ead26282e2e57d8a493371eed"
           }
         },
         "environment_independent": false,
