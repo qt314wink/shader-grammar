@@ -240,14 +240,14 @@
       }
     ],
     "environment": {
-      "operating_system": "win32 10.0.26220",
+      "operating_system": "environment-independent deterministic fixture",
       "hardware": [
-        "x64"
+        "not-applicable"
       ],
       "runtime": [
         {
           "name": "node",
-          "version": "v24.19.0"
+          "version": "environment-independent"
         }
       ],
       "dependencies": [
@@ -256,8 +256,8 @@
           "version": "8.x"
         }
       ],
-      "locale": "en-US",
-      "clock": "recorded UTC timestamps",
+      "locale": "not-applicable",
+      "clock": "fixed fixture timestamps, not execution time",
       "randomness": {
         "policy": "deterministic",
         "sources": [],
@@ -271,7 +271,7 @@
         "persistence": "immutable",
         "integrity": {
           "algorithm": "sha256",
-          "value": "57b5d4d85591c55706ae001899bf5505167b4692d8882fd8b740cbb5a3c338aa"
+          "value": "ed759dbef5921dd0ca28290a18690e6f41287485313a66f7c84022d4aa19164c"
         }
       }
     },
@@ -586,7 +586,7 @@
       "persistence": "immutable",
       "integrity": {
         "algorithm": "sha256",
-        "value": "57b5d4d85591c55706ae001899bf5505167b4692d8882fd8b740cbb5a3c338aa"
+        "value": "ed759dbef5921dd0ca28290a18690e6f41287485313a66f7c84022d4aa19164c"
       }
     },
     "instructions": "Run the generator once, then run the controlled experiment script with the persisted reference file.",
