@@ -16,6 +16,7 @@ Generated 2026-09-14T18:13:23.590Z
 | Positive control accepted | pass |
 | Experiment receipt schema + empty-receipt negative control | pass |
 | Minimal experiment receipt positive control | pass |
+| Controlled thin-film experiment receipt | pass |
 | Receipt conditional negative controls (3) | pass |
 
 ## Coverage matrix
@@ -57,6 +58,7 @@ Rows are specimens. Columns are catalog operators. A mark means the recipe binds
 
 - **info** `receipt-negative-control`: The experiment receipt schema compiled and rejected an empty receipt as required.
 - **info** `receipt-positive-control`: The minimal experiment receipt fixture passed.
+- **info** `controlled-experiment-receipt`: The controlled thin-film experiment receipt passed.
 - **info** `receipt-negative-control`: examples/invalid/supported-without-evidence.json was rejected as required.
 - **info** `receipt-negative-control`: examples/invalid/canonical-without-review.json was rejected as required.
 - **info** `receipt-negative-control`: examples/invalid/unlocked-milestone-with-blocker.json was rejected as required.

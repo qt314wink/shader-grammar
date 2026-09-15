@@ -1,0 +1,30 @@
+{
+  "experiment_id": "experiment-controlled-thin-film-001",
+  "reference_artifact_id": "evidence-controlled-thin-film-spectrum-001",
+  "candidate_model": "normal-incidence two-interface dielectric-film reflectance",
+  "fixed_parameters": {
+    "nIncident": 1,
+    "nFilm": 1.4,
+    "nExit": 1.5
+  },
+  "search_range_nm": [
+    100,
+    600
+  ],
+  "search_increment_nm": 1,
+  "fitted_thickness_nm": 250,
+  "fitted_mse": 0,
+  "flat_baseline_reflectance": 0.0288658594187968,
+  "flat_baseline_mse": 0.0000642426671626807,
+  "improvement_ratio": 289323251895.1356,
+  "same_environment_replication": {
+    "fitted_thickness_nm": 250,
+    "fitted_mse": 0,
+    "equivalent": true
+  },
+  "success": true,
+  "limitations": [
+    "Controlled analytic spectrum only.",
+    "No image formation, camera, lighting, polarization, or real-time shader validation."
+  ]
+}

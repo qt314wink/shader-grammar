@@ -355,7 +355,7 @@
         "ended_at": { "$ref": "#/$defs/timestamp" },
         "purpose": { "$ref": "#/$defs/nonEmptyString" },
         "research_question": { "$ref": "#/$defs/nonEmptyString" },
-        "execution_mode": { "enum": ["preregistered", "exploratory", "replication", "regression", "ablation", "benchmark", "incident_recovery"] }
+        "execution_mode": { "enum": ["preregistered", "exploratory", "replication", "regression", "ablation", "benchmark", "fixture", "incident_recovery"] }
       },
       "description": "Binds the post-run receipt to the pre-run intent and to one concrete attempt, preventing hindsight edits from masquerading as the original plan."
     },

@@ -18,6 +18,11 @@
     },
     {
       "level": "info",
+      "code": "controlled-experiment-receipt",
+      "message": "The controlled thin-film experiment receipt passed."
+    },
+    {
+      "level": "info",
       "code": "receipt-negative-control",
       "message": "examples/invalid/supported-without-evidence.json was rejected as required.",
       "expected": "determination requires test execution, evidence, falsification assessment, alternatives, and supported confidence"
@@ -158,6 +163,7 @@
     "positiveControlAccepted": true,
     "experimentReceiptSchemaValid": true,
     "experimentReceiptPositiveControl": true,
+    "controlledExperimentReceiptValid": true,
     "experimentReceiptNegativeControls": true
   }
 }

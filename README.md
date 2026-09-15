@@ -68,6 +68,8 @@ and caustic water bind with different numbers.
 ## Validate
 
 ```sh
+node tools/generate-controlled-thin-film-reference.mjs
+node tools/run-controlled-thin-film-experiment.mjs
 node tools/validate.mjs
 ```
 
@@ -81,6 +83,7 @@ The gate is stronger than schema-valid:
 6. The named-effect anti-example is rejected.
 7. The minimal thin-film example is accepted.
 8. The experiment receipt contract compiles under JSON Schema Draft 2020-12 and rejects an empty receipt.
+9. The committed controlled thin-film reconstruction receipt validates after its deterministic experiment is rerun.
 
 The receipt fixture gate also accepts the minimal bounded-observation receipt and
 rejects unsupported transitions to `supported`, `canonical`, and `unlocked`
@@ -97,6 +100,20 @@ milestone gates, and handoff requirements.
 `supported` is deliberately not equivalent to `canonical`. Canonical changes require
 separate approval, verified reproducibility, explicit consequences, and a rollback
 plan.
+
+## Controlled reconstruction benchmark
+
+`experiments/controlled-thin-film/` contains one deliberately narrow end-to-end
+reconstruction experiment. It persists a normal-incidence reference spectrum,
+fits a two-interface thin-film candidate across a preregistered thickness range,
+tests that candidate against a least-squares flat-spectrum alternative, repeats
+the deterministic fit, and emits `experiment-receipt.json`.
+
+This is a benchmark of the receipt protocol and analytic evaluator—not a claim
+that an external image has been reverse engineered, that a real material has
+been identified, or that the WebGL atelier is physically validated. The receipt
+unlocks only one capture-scoped external-reference experiment; bulk ingestion
+and canonical grammar promotion remain forbidden.
 
 ## Lineage
 

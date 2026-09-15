@@ -10,7 +10,9 @@
     "url": "https://github.com/qt314wink/shader-grammar.git"
   },
   "scripts": {
-    "validate": "node tools/validate.mjs"
+    "validate": "node tools/validate.mjs",
+    "generate:controlled-thin-film-reference": "node tools/generate-controlled-thin-film-reference.mjs",
+    "experiment:controlled-thin-film": "node tools/run-controlled-thin-film-experiment.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

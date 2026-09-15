@@ -1,0 +1,1115 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "receipt-controlled-thin-film-001",
+  "receipt_status": "complete",
+  "experiment_identity": {
+    "experiment_id": "experiment-controlled-thin-film-001",
+    "contract_ref": {
+      "artifact_id": "contract-controlled-thin-film-001",
+      "kind": "experiment_contract",
+      "role": "pre-run experiment contract",
+      "locator": "experiments/controlled-thin-film/experiment-contract.json",
+      "persistence": "immutable",
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "512108783dce2a12a0a7c576f69e7f32771b62a15dff595b3d707ae1d1667c3e"
+      }
+    },
+    "run_id": "fixture-controlled-thin-film-001",
+    "run_attempt": 1,
+    "started_at": "2026-09-14T12:00:00Z",
+    "ended_at": "2026-09-14T12:00:02Z",
+    "purpose": "Exercise one complete evidence-to-reconstruction-to-receipt path using a deterministic, typed Shader Grammar primitive.",
+    "research_question": "Given a persisted normal-incidence reflectance spectrum, can the thin-film model recover the film thickness more accurately than a flat-spectrum alternative?",
+    "execution_mode": "fixture"
+  },
+  "provenance": {
+    "recorded_by": {
+      "actor_id": "shader-grammar-validator",
+      "actor_type": "service",
+      "role": "deterministic fixture recorder"
+    },
+    "executed_by": [
+      {
+        "actor_id": "shader-grammar-validator",
+        "actor_type": "service",
+        "role": "deterministic evaluator"
+      }
+    ],
+    "recorded_at": "2026-09-14T12:00:02Z",
+    "source_chain": [
+      {
+        "artifact_id": "evidence-controlled-thin-film-spectrum-001",
+        "kind": "dataset",
+        "role": "controlled authoritative reference",
+        "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "303dbcb5a194d0ab7188dfb01aefc52616533c40a224b0957508599b3f194ddb"
+        }
+      }
+    ],
+    "custody_statement": "This is a deterministic fixture with deliberately fixed provenance timestamps, not a chronological record of each later CI execution. Reference, contract, evaluator, result, and receipt are retained in the repository experiment directory.",
+    "rights_and_policy": {
+      "status": "verified",
+      "license": "MIT",
+      "permitted_uses": [
+        "research",
+        "validation"
+      ],
+      "restrictions": [
+        "No real-world material identity claim."
+      ]
+    }
+  },
+  "scope": {
+    "in_scope": [
+      "normal-incidence two-interface dielectric film",
+      "D65-labelled spectral sample grid",
+      "film thickness fit"
+    ],
+    "out_of_scope": [
+      "photographic inverse rendering",
+      "unknown lighting",
+      "camera response",
+      "polarization",
+      "off-normal incidence",
+      "canonical grammar change"
+    ],
+    "anti_questions": [
+      "Does this establish the source mechanism of a photograph?",
+      "Does this validate a real-time GLSL implementation?"
+    ],
+    "unit_of_analysis": "31-sample normal-incidence reflectance spectrum",
+    "validity_domain": "The fixed-IOR analytic evaluator and the persisted controlled reference spectrum.",
+    "generalization_boundary": "This benchmark does not establish inverse reconstruction from images or validate a GLSL renderer.",
+    "known_confounders": [
+      "Controlled source is analytically generated.",
+      "Normal incidence only."
+    ]
+  },
+  "inputs": [
+    {
+      "artifact": {
+        "artifact_id": "evidence-controlled-thin-film-spectrum-001",
+        "kind": "dataset",
+        "role": "controlled authoritative reference",
+        "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "303dbcb5a194d0ab7188dfb01aefc52616533c40a224b0957508599b3f194ddb"
+        }
+      },
+      "authoritativeness": "authoritative",
+      "used_as": "target spectrum",
+      "selection_reason": "Declared by pre-run contract.",
+      "preprocessing": [],
+      "suitability": {
+        "status": "suitable",
+        "questions_supported": [
+          "Thickness recovery in this controlled evaluator."
+        ],
+        "questions_not_supported": [
+          "photographic inverse rendering",
+          "unknown lighting",
+          "camera response",
+          "polarization",
+          "off-normal incidence",
+          "canonical grammar change"
+        ],
+        "reason": "The spectrum is exact for the declared controlled benchmark."
+      }
+    },
+    {
+      "artifact": {
+        "artifact_id": "recipe-minimal-thin-film-001",
+        "kind": "configuration",
+        "role": "grammar recipe",
+        "locator": "examples/valid/minimal-thin-film.json",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "d5ed26107a395407f50a10ddd2c409f90036bd0a4cceaa720a1740b003c00407"
+        }
+      },
+      "authoritativeness": "supporting",
+      "used_as": "typed operator and parameter vocabulary",
+      "selection_reason": "It defines the grammar primitive under test.",
+      "preprocessing": [],
+      "suitability": {
+        "status": "suitable",
+        "questions_supported": [
+          "Typed thin-film parameter binding."
+        ],
+        "questions_not_supported": [
+          "Reference-spectrum provenance."
+        ],
+        "reason": "The recipe names the same normal-incidence thin-film structure."
+      }
+    }
+  ],
+  "action": {
+    "planned_method_ref": "experiments/controlled-thin-film/experiment-contract.json#/method",
+    "actual_steps": [
+      {
+        "step_id": "step-fit-001",
+        "sequence": 1,
+        "action": "Perform exhaustive 1 nm thickness fit.",
+        "intention": "Discriminate thin-film and flat-spectrum hypotheses.",
+        "executor": {
+          "actor_id": "shader-grammar-validator",
+          "actor_type": "service",
+          "role": "deterministic evaluator"
+        },
+        "started_at": "2026-09-14T12:00:00Z",
+        "ended_at": "2026-09-14T12:00:01Z",
+        "status": "passed",
+        "input_ids": [
+          "evidence-controlled-thin-film-spectrum-001"
+        ],
+        "output_ids": [
+          "result-controlled-thin-film-001"
+        ],
+        "command_or_procedure": "node tools/run-controlled-thin-film-experiment.mjs",
+        "parameters": {
+          "range_nm": [
+            100,
+            600
+          ],
+          "increment_nm": 1
+        },
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      {
+        "step_id": "step-replicate-001",
+        "sequence": 2,
+        "action": "Repeat deterministic fit.",
+        "intention": "Verify same-environment reproducibility.",
+        "executor": {
+          "actor_id": "shader-grammar-validator",
+          "actor_type": "service",
+          "role": "deterministic evaluator"
+        },
+        "started_at": "2026-09-14T12:00:01Z",
+        "ended_at": "2026-09-14T12:00:02Z",
+        "status": "passed",
+        "input_ids": [
+          "evidence-controlled-thin-film-spectrum-001"
+        ],
+        "output_ids": [
+          "result-controlled-thin-film-001"
+        ],
+        "command_or_procedure": "Repeat fit in the same runtime.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      }
+    ],
+    "environment": {
+      "operating_system": "environment-independent deterministic fixture",
+      "hardware": [
+        "not-applicable"
+      ],
+      "runtime": [
+        {
+          "name": "node",
+          "version": "environment-independent"
+        }
+      ],
+      "dependencies": [
+        {
+          "name": "ajv",
+          "version": "8.x"
+        }
+      ],
+      "locale": "not-applicable",
+      "clock": "fixed fixture timestamps, not execution time",
+      "randomness": {
+        "policy": "deterministic",
+        "sources": [],
+        "seeds": []
+      },
+      "manifest_ref": {
+        "artifact_id": "evaluator-source-001",
+        "kind": "source_code",
+        "role": "deterministic evaluator",
+        "locator": "tools/run-controlled-thin-film-experiment.mjs",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "ed759dbef5921dd0ca28290a18690e6f41287485313a66f7c84022d4aa19164c"
+        }
+      }
+    },
+    "controls_executed": [
+      {
+        "control_id": "control-flat-baseline-001",
+        "purpose": "Test whether a constant reflectance explanation is sufficient.",
+        "status": "passed",
+        "result": "Thin-film MSE improved by 289323251895.1356.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      }
+    ],
+    "execution_outcome": "completed_as_planned",
+    "failure_log": []
+  },
+  "outputs": [
+    {
+      "output_id": "result-controlled-thin-film-001",
+      "expected": true,
+      "status": "produced",
+      "purpose": "Persist fitted parameters and comparison metrics.",
+      "artifact": {
+        "artifact_id": "result-controlled-thin-film-001",
+        "kind": "measurement_record",
+        "role": "reconstruction result",
+        "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "7b853abc3ed2fa68cf51d1151c81be311e0f77e72942f289b5d2d12c0503643d"
+        }
+      },
+      "acceptance_checks": [
+        {
+          "check_id": "check-fit-001",
+          "criterion": "Thin-film fit outperforms flat baseline by at least 100x.",
+          "result": "pass",
+          "actual": "improvement ratio = 289323251895.1356",
+          "evidence_refs": [
+            {
+              "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+              "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+              "supports": "Reference spectral samples.",
+              "admissibility": "direct",
+              "quality": "high",
+              "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+            },
+            {
+              "evidence_id": "result-controlled-thin-film-001",
+              "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+              "supports": "Fitted candidate materially outperforms flat baseline.",
+              "admissibility": "direct",
+              "quality": "high",
+              "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+            }
+          ]
+        }
+      ],
+      "downstream_use": "Controlled benchmark regression and receipt handoff."
+    }
+  ],
+  "measurements": {
+    "applicability": "applicable",
+    "reason": "The experiment discriminates competing models by spectral MSE.",
+    "executions": [
+      {
+        "measurement_id": "measurement-mse-001",
+        "definition_ref": "experiments/controlled-thin-film/experiment-contract.json#/success_criterion",
+        "property_measured": "Mean squared reflectance error",
+        "method": "Arithmetic mean of squared sample residuals",
+        "result": 0,
+        "units": "reflectance_squared",
+        "validity_domain": "The 31 persisted samples and the evaluated model family.",
+        "supports": "Relative fit quality within this controlled benchmark.",
+        "does_not_establish": "Physical source mechanism of external imagery or real-time render fidelity.",
+        "blindspots": [
+          "No camera model.",
+          "No off-normal geometry.",
+          "No polarization."
+        ],
+        "uncertainty": "Numerical roundoff is negligible relative to model-scope limits.",
+        "status": "valid",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      }
+    ],
+    "coverage_assessment": "Covers spectral fit and deterministic replication only."
+  },
+  "timing": {
+    "applicability": "not_applicable",
+    "reason": "No temporal claim is made; the spectrum is static.",
+    "contract_ref": null,
+    "observation_window": null,
+    "sampling": null,
+    "sufficiency": "not_applicable",
+    "clock_and_sync": null,
+    "timing_risks": [
+      "No animation behavior can be inferred."
+    ]
+  },
+  "determinations": [
+    {
+      "determination_id": "determination-film-supported-001",
+      "claim": "Within the controlled benchmark, the two-interface thin-film candidate recovers the reference spectrum more accurately than the flat-spectrum alternative.",
+      "subject": "evidence-controlled-thin-film-spectrum-001",
+      "predicate": "is_better_explained_by",
+      "object": "two-interface thin-film candidate",
+      "epistemic_state": "supported",
+      "scope": "This deterministic normal-incidence reference and fixed IOR model only.",
+      "basis": "controlled_test",
+      "evidence_refs": [
+        {
+          "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+          "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+          "supports": "Reference spectral samples.",
+          "admissibility": "direct",
+          "quality": "high",
+          "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+        },
+        {
+          "evidence_id": "result-controlled-thin-film-001",
+          "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+          "supports": "Fitted candidate materially outperforms flat baseline.",
+          "admissibility": "direct",
+          "quality": "high",
+          "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+        }
+      ],
+      "test_execution": {
+        "test_id": "test-film-vs-flat-001",
+        "contract_criterion_ref": "experiments/controlled-thin-film/experiment-contract.json#/success_criterion",
+        "method": "Exhaustive thickness fit versus least-squares constant baseline.",
+        "outcome": "pass",
+        "expected_result": "Thin-film MSE is at least 100x smaller.",
+        "actual_result": "Fitted 250 nm; ratio 289323251895.1356.",
+        "controls": [
+          "control-flat-baseline-001"
+        ],
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      "falsification": {
+        "assessed": true,
+        "falsifier": "Flat baseline error is comparable to fitted thin-film error, or replication differs.",
+        "observed": false,
+        "result": "not_falsified",
+        "residual_risk": "The conclusion is limited to the controlled evaluator.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      "confidence": {
+        "level": "high",
+        "score": 0.95,
+        "method": "deterministic fit margin and same-environment replication",
+        "calibration_basis": "Exact persisted samples and >100x predeclared threshold."
+      },
+      "uncertainty": "No uncertainty is claimed outside the controlled analytic model.",
+      "limitations": [
+        "Synthetic controlled reference.",
+        "Fixed IORs.",
+        "No image or GLSL renderer."
+      ],
+      "prohibited_inferences": [
+        "Do not identify a material.",
+        "Do not infer an external image source mechanism.",
+        "Do not promote this to canonical grammar knowledge."
+      ],
+      "alternative_hypothesis_ids": [
+        "hypothesis-flat-001"
+      ],
+      "downstream_trust": "A downstream stage may trust the benchmark fit result and its scope, not a general image-to-shader capability claim."
+    }
+  ],
+  "uncertainty": {
+    "overall_level": "low",
+    "sources": [
+      {
+        "source": "model-scope exclusion",
+        "type": "model",
+        "magnitude": "moderate",
+        "affected_claim_ids": [
+          "determination-film-supported-001"
+        ],
+        "mitigation": "Use separate experiments for camera, angle, polarization, and external imagery."
+      }
+    ],
+    "propagation": "Constrains generalization, not the deterministic in-scope comparison.",
+    "decision_sensitivity": "High for selecting the next experiment, low for this benchmark result.",
+    "reduction_plan": [
+      "Add a controlled angle-dependent test.",
+      "Add one externally supplied image only after capture assumptions are documented."
+    ],
+    "no_alternative_hypothesis_reason": null
+  },
+  "alternative_hypotheses": [
+    {
+      "hypothesis_id": "hypothesis-flat-001",
+      "statement": "A constant reflectance model is adequate for the reference spectrum.",
+      "status": "contradicted",
+      "plausibility": {
+        "level": "very_low",
+        "score": 0.02,
+        "method": "MSE comparison",
+        "calibration_basis": "Predeclared 100x threshold."
+      },
+      "distinguishing_test": "Compare fitted thin-film MSE with least-squares constant baseline MSE.",
+      "supporting_evidence_refs": [],
+      "contradicting_evidence_refs": [
+        {
+          "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+          "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+          "supports": "Reference spectral samples.",
+          "admissibility": "direct",
+          "quality": "high",
+          "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+        },
+        {
+          "evidence_id": "result-controlled-thin-film-001",
+          "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+          "supports": "Fitted candidate materially outperforms flat baseline.",
+          "admissibility": "direct",
+          "quality": "high",
+          "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+        }
+      ],
+      "why_not_selected": "Flat MSE was 289323251895.1356 times larger than thin-film MSE.",
+      "next_action": "Retain as a regression baseline."
+    }
+  ],
+  "deviations": {
+    "occurred": false,
+    "items": [],
+    "overall_impact": "none"
+  },
+  "exceptions": {
+    "present": false,
+    "items": [],
+    "blocking": false
+  },
+  "reproducibility": {
+    "state": "verified_same_environment",
+    "package_ref": {
+      "artifact_id": "experiment-package-001",
+      "kind": "source_code",
+      "role": "experiment evaluator package",
+      "locator": "tools/run-controlled-thin-film-experiment.mjs",
+      "persistence": "immutable",
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "ed759dbef5921dd0ca28290a18690e6f41287485313a66f7c84022d4aa19164c"
+      }
+    },
+    "instructions": "Run the generator once, then run the controlled experiment script with the persisted reference file.",
+    "independent_runs": [
+      {
+        "run_id": "run-controlled-thin-film-001-replication",
+        "executed_by": {
+          "actor_id": "shader-grammar-validator",
+          "actor_type": "service",
+          "role": "deterministic evaluator"
+        },
+        "environment_ref": {
+          "artifact_id": "environment-node-001",
+          "kind": "environment_manifest",
+          "role": "runtime environment",
+          "locator": "package.json",
+          "persistence": "immutable",
+          "integrity": {
+            "algorithm": "sha256",
+            "value": "1e35f51a780b7da36cb0e7152d9e18ae1877a24ead26282e2e57d8a493371eed"
+          }
+        },
+        "environment_independent": false,
+        "outcome": "equivalent",
+        "comparison": "Thickness and MSE match exactly on repeated deterministic fit.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      }
+    ],
+    "equivalence_criteria": [
+      "Same fitted thickness.",
+      "Same floating-point MSE."
+    ],
+    "result": "Replication matched.",
+    "known_blockers": []
+  },
+  "semantic_validity": {
+    "overall_result": "pass",
+    "checks": [
+      {
+        "check": "observation_is_non_causal",
+        "result": "pass",
+        "reason": "The receipt explicitly bounds controlled benchmark claims and preserves layer distinctions.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      {
+        "check": "interpretation_not_promoted_to_fact",
+        "result": "pass",
+        "reason": "The receipt explicitly bounds controlled benchmark claims and preserves layer distinctions.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      {
+        "check": "hypothesis_is_falsifiable",
+        "result": "pass",
+        "reason": "The receipt explicitly bounds controlled benchmark claims and preserves layer distinctions.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      {
+        "check": "measurement_claim_is_bounded",
+        "result": "pass",
+        "reason": "The receipt explicitly bounds controlled benchmark claims and preserves layer distinctions.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      },
+      {
+        "check": "support_not_equated_with_canonicality",
+        "result": "pass",
+        "reason": "The receipt explicitly bounds controlled benchmark claims and preserves layer distinctions.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      }
+    ],
+    "ontology_version": "shader-grammar-v0.1",
+    "unresolved_terms": [],
+    "layer_boundary_statement": "The analytic evaluator implements a controlled model test; it is neither a real-world material attribution nor a claim that the current atelier renderer implements the model."
+  },
+  "qa": {
+    "overall_result": "pass",
+    "checks": [
+      {
+        "check_id": "qa-contract-001",
+        "category": "method",
+        "question": "Did the run follow the preregistered fit and baseline comparison?",
+        "method": "Inspect persisted contract, script, and result.",
+        "result": "pass",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ],
+        "failure_prevented": "Post-hoc success criteria."
+      },
+      {
+        "check_id": "qa-scope-001",
+        "category": "semantic",
+        "question": "Does the receipt avoid image-to-shader and material-identity overclaim?",
+        "method": "Review scope and prohibited inferences.",
+        "result": "pass",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ],
+        "failure_prevented": "Scope laundering."
+      }
+    ],
+    "reviewers": [
+      {
+        "actor_id": "shader-grammar-validator",
+        "actor_type": "service",
+        "role": "automated QA"
+      }
+    ],
+    "coverage": "Controlled reference, model fit, baseline, replication, and receipt validity.",
+    "unresolved_findings": [],
+    "completed_at": "2026-09-14T12:00:02Z"
+  },
+  "stop_conditions": {
+    "evaluations": [
+      {
+        "condition_id": "stop-overclaim-001",
+        "contract_ref": "experiments/controlled-thin-film/experiment-contract.json#/stop_conditions/0",
+        "condition": "Do not infer real-world material identity.",
+        "triggered": false,
+        "blocking": true,
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ],
+        "response": "Receipt prohibits the inference."
+      },
+      {
+        "condition_id": "stop-digest-001",
+        "contract_ref": "experiments/controlled-thin-film/experiment-contract.json#/stop_conditions/2",
+        "condition": "Stop if persisted reference digest is unavailable.",
+        "triggered": false,
+        "blocking": true,
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ],
+        "response": "Digest recorded before fitting."
+      }
+    ],
+    "blocking_triggered": false,
+    "execution_stop_reason": null,
+    "resume_conditions": [
+      "Use an externally supplied reference only with recorded capture and rights provenance."
+    ]
+  },
+  "governance": {
+    "knowledge_state": "supported",
+    "review_state": "not_requested",
+    "decision_authority": {
+      "actor_id": "shader-grammar-validator",
+      "actor_type": "service",
+      "role": "benchmark authority"
+    },
+    "approvals": [],
+    "policy_refs": [
+      "docs/STATUS.md",
+      "experiments/controlled-thin-film/experiment-contract.json"
+    ],
+    "canonical_promotion_separate_from_support": true,
+    "retention_class": "long_term",
+    "access_class": "public",
+    "supersession_policy": "Supersede with a new receipt if the evaluator, reference, or scope changes."
+  },
+  "canonical_consequences": {
+    "disposition": "none",
+    "reason": "One controlled benchmark does not alter the closed operator catalog.",
+    "supported_determination_ids": [
+      "determination-film-supported-001"
+    ],
+    "changes": [],
+    "affected_assets": [],
+    "migration_required": false,
+    "rollback_plan": null
+  },
+  "next_milestone": {
+    "milestone_id": "milestone-external-reference-001",
+    "name": "One capture-scoped external reference experiment",
+    "state": "unlocked",
+    "purpose": "Test the same receipt protocol with a user-supplied image under explicit capture assumptions.",
+    "prerequisites": [
+      {
+        "prerequisite_id": "prereq-controlled-benchmark-001",
+        "criterion": "Controlled fit passes threshold and same-environment replication.",
+        "satisfied": true,
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ],
+        "failure_consequence": "Remain at controlled benchmark stage."
+      }
+    ],
+    "blocking_reasons": [],
+    "authorized_actions": [
+      "Register one external reference with provenance and capture limitations.",
+      "Draft competing mechanism hypotheses."
+    ],
+    "forbidden_actions": [
+      "Bulk ingestion.",
+      "Canonical grammar promotion."
+    ],
+    "unlock_evidence_refs": [
+      {
+        "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+        "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+        "supports": "Reference spectral samples.",
+        "admissibility": "direct",
+        "quality": "high",
+        "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+      },
+      {
+        "evidence_id": "result-controlled-thin-film-001",
+        "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+        "supports": "Fitted candidate materially outperforms flat baseline.",
+        "admissibility": "direct",
+        "quality": "high",
+        "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+      }
+    ]
+  },
+  "handoff": {
+    "destination_stage": "capture-scoped external reference experiment",
+    "destination_owner": {
+      "actor_id": "shader-grammar-researcher",
+      "actor_type": "human",
+      "role": "research lead"
+    },
+    "purpose": "Transfer a proven controlled-evaluator baseline to a more realistic but still single-reference experiment.",
+    "required_artifacts": [
+      {
+        "artifact_id": "evidence-controlled-thin-film-spectrum-001",
+        "kind": "dataset",
+        "role": "controlled reference",
+        "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "303dbcb5a194d0ab7188dfb01aefc52616533c40a224b0957508599b3f194ddb"
+        }
+      },
+      {
+        "artifact_id": "result-controlled-thin-film-001",
+        "kind": "measurement_record",
+        "role": "reconstruction result",
+        "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+        "persistence": "immutable",
+        "integrity": {
+          "algorithm": "sha256",
+          "value": "7b853abc3ed2fa68cf51d1151c81be311e0f77e72942f289b5d2d12c0503643d"
+        }
+      }
+    ],
+    "trusted_assertions": [
+      {
+        "assertion": "The evaluator can recover a controlled thin-film thickness and reject a flat baseline within its declared scope.",
+        "determination_ids": [
+          "determination-film-supported-001"
+        ],
+        "scope": "Controlled normal-incidence analytic spectrum only.",
+        "confidence": {
+          "level": "high",
+          "score": 0.95,
+          "method": "MSE threshold and replication",
+          "calibration_basis": "Persisted result."
+        },
+        "expiry_or_revalidation_condition": "Revalidate when evaluator code or reference spectrum changes."
+      }
+    ],
+    "must_verify": [
+      "External reference provenance, rights, lighting, view angle, and camera assumptions."
+    ],
+    "must_not_infer": [
+      "That a photograph has the controlled model's source mechanism.",
+      "That the atelier canvas is physically validated."
+    ],
+    "open_questions": [
+      "Which capture-scoped visual behavior should be tested next?"
+    ],
+    "known_risks": [
+      "External imagery is underdetermined."
+    ],
+    "acceptance_criteria": [
+      "One reference, one preregistered competing-hypothesis contract, one bounded receipt."
+    ],
+    "rejection_conditions": [
+      "Missing input provenance or a causal claim unsupported by the evidence."
+    ],
+    "first_action": "Register one user-supplied reference image and its capture limitations.",
+    "handoff_status": "ready"
+  },
+  "validity": {
+    "state": "valid",
+    "definition_of_done_met": true,
+    "completeness_checks": [
+      {
+        "check_id": "validity-actual-receipt-001",
+        "criterion": "Contract, input, action, output, evidence, determination, QA, reproducibility, and handoff are all recorded.",
+        "result": "pass",
+        "actual": "Complete for the controlled benchmark.",
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ]
+      }
+    ],
+    "invalidity_conditions_evaluated": [
+      {
+        "condition": "Reference digest missing or fit does not outperform flat baseline.",
+        "triggered": false,
+        "evidence_refs": [
+          {
+            "evidence_id": "evidence-controlled-thin-film-spectrum-001",
+            "locator": "experiments/controlled-thin-film/reference-spectrum.json",
+            "supports": "Reference spectral samples.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A mismatched or corrupted spectrum invalidates the fit."
+          },
+          {
+            "evidence_id": "result-controlled-thin-film-001",
+            "locator": "experiments/controlled-thin-film/reconstruction-result.json",
+            "supports": "Fitted candidate materially outperforms flat baseline.",
+            "admissibility": "direct",
+            "quality": "high",
+            "falsification_relevance": "A flat baseline with comparable error contradicts the determination."
+          }
+        ],
+        "consequence": "Receipt is invalid for benchmark completion."
+      }
+    ],
+    "blocking_defects": [],
+    "validity_statement": "Valid for the declared controlled benchmark only.",
+    "assessed_by": {
+      "actor_id": "shader-grammar-validator",
+      "actor_type": "service",
+      "role": "automated QA"
+    },
+    "assessed_at": "2026-09-14T12:00:02Z"
+  },
+  "created_at": "2026-09-14T12:00:02Z"
+}

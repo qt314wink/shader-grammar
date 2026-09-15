@@ -155,6 +155,22 @@ if (validateExperimentReceipt && !validateExperimentReceipt(receiptFixture)) {
   note("receipt-positive-control", "The minimal experiment receipt fixture passed.");
 }
 
+const controlledExperimentReceipt = readJson(
+  "experiments/controlled-thin-film/experiment-receipt.json",
+);
+if (validateExperimentReceipt && !validateExperimentReceipt(controlledExperimentReceipt)) {
+  fail(
+    "controlled-experiment-receipt",
+    "The controlled thin-film experiment receipt failed schema validation.",
+    { errors: validateExperimentReceipt.errors },
+  );
+} else if (validateExperimentReceipt) {
+  note(
+    "controlled-experiment-receipt",
+    "The controlled thin-film experiment receipt passed.",
+  );
+}
+
 const receiptMutationFiles = [
   "examples/invalid/supported-without-evidence.json",
   "examples/invalid/canonical-without-review.json",
@@ -403,6 +419,8 @@ const report = {
       Boolean(validateExperimentReceipt) && !validateExperimentReceipt({}),
     experimentReceiptPositiveControl:
       Boolean(validateExperimentReceipt) && validateExperimentReceipt(receiptFixture),
+    controlledExperimentReceiptValid:
+      Boolean(validateExperimentReceipt) && validateExperimentReceipt(controlledExperimentReceipt),
     experimentReceiptNegativeControls:
       receiptMutationResults.length === receiptMutationFiles.length &&
       receiptMutationResults.every((result) => result.rejected),
@@ -440,6 +458,7 @@ Generated ${report.generatedAt}
 | Positive control accepted | ${report.criteria.positiveControlAccepted ? "pass" : "fail"} |
 | Experiment receipt schema + empty-receipt negative control | ${report.criteria.experimentReceiptSchemaValid ? "pass" : "fail"} |
 | Minimal experiment receipt positive control | ${report.criteria.experimentReceiptPositiveControl ? "pass" : "fail"} |
+| Controlled thin-film experiment receipt | ${report.criteria.controlledExperimentReceiptValid ? "pass" : "fail"} |
 | Receipt conditional negative controls (3) | ${report.criteria.experimentReceiptNegativeControls ? "pass" : "fail"} |
 
 ## Coverage matrix
