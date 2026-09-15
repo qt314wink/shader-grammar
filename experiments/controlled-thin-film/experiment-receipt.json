@@ -12,22 +12,22 @@
       "persistence": "immutable",
       "integrity": {
         "algorithm": "sha256",
-        "value": "d6dd32aa94c8807c8f337b20683610dd285fba1024fa7376ceddedfc05f0ad22"
+        "value": "deebf230ee52d35510db579114d8225c59384e3a6995fb038ca7f478d7816db8"
       }
     },
-    "run_id": "run-controlled-thin-film-001",
+    "run_id": "fixture-controlled-thin-film-001",
     "run_attempt": 1,
     "started_at": "2026-09-14T12:00:00Z",
     "ended_at": "2026-09-14T12:00:02Z",
     "purpose": "Exercise one complete evidence-to-reconstruction-to-receipt path using a deterministic, typed Shader Grammar primitive.",
     "research_question": "Given a persisted normal-incidence reflectance spectrum, can the thin-film model recover the film thickness more accurately than a flat-spectrum alternative?",
-    "execution_mode": "benchmark"
+    "execution_mode": "fixture"
   },
   "provenance": {
     "recorded_by": {
       "actor_id": "shader-grammar-validator",
       "actor_type": "service",
-      "role": "experiment recorder"
+      "role": "deterministic fixture recorder"
     },
     "executed_by": [
       {
@@ -50,7 +50,7 @@
         }
       }
     ],
-    "custody_statement": "Reference, contract, evaluator, result, and receipt are retained in the repository experiment directory.",
+    "custody_statement": "This is a deterministic fixture with deliberately fixed provenance timestamps, not a chronological record of each later CI execution. Reference, contract, evaluator, result, and receipt are retained in the repository experiment directory.",
     "rights_and_policy": {
       "status": "verified",
       "license": "MIT",
@@ -271,7 +271,7 @@
         "persistence": "immutable",
         "integrity": {
           "algorithm": "sha256",
-          "value": "b1dfac3dff509e908589f912ef1d4556fbf144972f18f8fd1f7048720ddba5b3"
+          "value": "d2c5833b452f83bb4b00bec4f9e9ef312fa14caa884e23c7c350ee9c9802acb2"
         }
       }
     },
@@ -586,7 +586,7 @@
       "persistence": "immutable",
       "integrity": {
         "algorithm": "sha256",
-        "value": "b1dfac3dff509e908589f912ef1d4556fbf144972f18f8fd1f7048720ddba5b3"
+        "value": "d2c5833b452f83bb4b00bec4f9e9ef312fa14caa884e23c7c350ee9c9802acb2"
       }
     },
     "instructions": "Run the generator once, then run the controlled experiment script with the persisted reference file.",
@@ -606,7 +606,7 @@
           "persistence": "immutable",
           "integrity": {
             "algorithm": "sha256",
-            "value": "3f990666654ca162313e93702e881a4270be86bc6f2b4922f9f4fbb12384b369"
+            "value": "c822a8c3700304d1628b418887dfaf9a48786540acb8d26ed777e564f38d9dd7"
           }
         },
         "environment_independent": false,

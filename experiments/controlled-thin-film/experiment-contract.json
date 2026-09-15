@@ -30,5 +30,11 @@
   ],
   "success_criterion": "Fitted thin-film MSE is at least 100 times smaller than flat-spectrum MSE and the same-environment replication returns the same thickness and MSE.",
   "failure_criterion": "The fit is not materially better than the flat baseline, has no unique minimum, or cannot be reproduced in a second run.",
+  "inputs": {
+    "reference_spectrum": {
+      "path": "experiments/controlled-thin-film/reference-spectrum.json",
+      "samples_sha256": "9c3911c690e25d16bfce357ffcd955e5b58ffdcc019a1167f660ff06f67b87e2"
+    }
+  },
   "stop_conditions": ["Do not infer real-world material identity.", "Do not promote the result to canonical grammar knowledge.", "Stop if the persisted reference digest does not match the contract input."]
 }
