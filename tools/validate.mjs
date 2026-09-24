@@ -17,6 +17,18 @@ import { parse as parseYaml } from "yaml";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const WORKSPACE = path.resolve(ROOT, "..");
+const args = new Set(process.argv.slice(2));
+const supportedArgs = new Set(["--write-report", "--emit-workspace"]);
+const unknownArgs = [...args].filter((arg) => !supportedArgs.has(arg));
+
+if (unknownArgs.length > 0) {
+  console.error(`Unknown option(s): ${unknownArgs.join(", ")}`);
+  console.error("Usage: node tools/validate.mjs [--write-report] [--emit-workspace]");
+  process.exit(2);
+}
+
+const writeReport = args.has("--write-report");
+const emitWorkspace = args.has("--emit-workspace");
 const SPECIMEN_IDS = [
   "oil-slick",
   "soap-film",
@@ -427,9 +439,6 @@ const report = {
   },
 };
 
-fs.mkdirSync(path.join(ROOT, "reports"), { recursive: true });
-fs.writeFileSync(path.join(ROOT, "reports/validation-report.json"), JSON.stringify(report, null, 2));
-
 const matrixHeader = ["specimen", ...operators.map((o) => o.id)];
 const matrixLines = [
   `| ${["specimen", ...operators.map((o) => o.id.replace(/-/g, "\u2011"))].join(" | ")} |`,
@@ -488,8 +497,6 @@ ${
 Schema + reuse proves the *description* generalizes. It does not prove a renderer implements Airy sums, Mie kernels, or a spectral observer correctly. v0.1 is an ontology with an evaluative sketch, not a path tracer.
 `;
 
-fs.writeFileSync(path.join(ROOT, "reports/validation-report.md"), md);
-
 const bundle = {
   version: "0.1.0",
   operators,
@@ -505,14 +512,22 @@ const bundle = {
   },
 };
 
-const bundleDir = path.join(WORKSPACE, "src/lib/grammar");
-fs.mkdirSync(bundleDir, { recursive: true });
-fs.writeFileSync(path.join(bundleDir, "bundle.json"), JSON.stringify(bundle));
+if (writeReport) {
+  fs.mkdirSync(path.join(ROOT, "reports"), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, "reports/validation-report.json"), `${JSON.stringify(report, null, 2)}\n`);
+  fs.writeFileSync(path.join(ROOT, "reports/validation-report.md"), md);
+}
 
-const publicDir = path.join(WORKSPACE, "public/grammar");
-fs.mkdirSync(publicDir, { recursive: true });
-fs.writeFileSync(path.join(publicDir, "validation-report.json"), JSON.stringify(report, null, 2));
-fs.writeFileSync(path.join(publicDir, "validation-report.md"), md);
+if (emitWorkspace) {
+  const bundleDir = path.join(WORKSPACE, "src/lib/grammar");
+  fs.mkdirSync(bundleDir, { recursive: true });
+  fs.writeFileSync(path.join(bundleDir, "bundle.json"), `${JSON.stringify(bundle, null, 2)}\n`);
+
+  const publicDir = path.join(WORKSPACE, "public/grammar");
+  fs.mkdirSync(publicDir, { recursive: true });
+  fs.writeFileSync(path.join(publicDir, "validation-report.json"), `${JSON.stringify(report, null, 2)}\n`);
+  fs.writeFileSync(path.join(publicDir, "validation-report.md"), md);
+}
 
 if (failed) {
   console.error("Shader Grammar v0.1 validation FAILED");
@@ -525,3 +540,5 @@ if (failed) {
 console.log("Shader Grammar v0.1 validation PASS");
 console.log(`  ${SPECIMEN_IDS.length} specimens, ${operators.length} operators, all reused.`);
 console.log(`  negative control rejected (${invalidFails.length} findings).`);
+if (writeReport) console.log("  wrote repository validation reports.");
+if (emitWorkspace) console.log("  emitted workspace bundle and public validation reports.");
