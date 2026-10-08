@@ -68,10 +68,27 @@ and caustic water bind with different numbers.
 ## Validate
 
 ```sh
+# Validation is read-only: it does not rewrite committed reports or parent-workspace artifacts.
+node tools/validate.mjs
+
+# Write timestamped repository reports only when a review or release needs them.
+node tools/validate.mjs --write-report
+
+# Emit the consumer bundle and public report into the parent workspace only on purpose.
+node tools/validate.mjs --emit-workspace
+
+# Full deterministic experiment sequence.
 node tools/generate-controlled-thin-film-reference.mjs
 node tools/run-controlled-thin-film-experiment.mjs
 node tools/validate.mjs
 ```
+
+`npm run validate` is intentionally read-only. `npm run validate:report` writes
+the two timestamped files under `reports/`; `npm run emit:workspace` writes the
+consumer bundle and public report outside this repository. Use those explicit
+commands for a release, review artifact, or consumer refresh—not as a side
+effect of ordinary validation. `npm run test:validate-read-only` verifies that
+the default validator leaves every generated-output target unchanged.
 
 The gate is stronger than schema-valid:
 

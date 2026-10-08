@@ -606,7 +606,7 @@
           "persistence": "immutable",
           "integrity": {
             "algorithm": "sha256",
-            "value": "1e35f51a780b7da36cb0e7152d9e18ae1877a24ead26282e2e57d8a493371eed"
+            "value": "7f765048d95a264b8085aaa3028f57f9204873c741863b06fbabc0d850b25e11"
           }
         },
         "environment_independent": false,

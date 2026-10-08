@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- `npm run validate` is now read-only. Timestamped reports require
+  `npm run validate:report`; parent-workspace bundle/public output requires
+  `npm run emit:workspace`.
+- Added a regression test that proves default validation leaves generated-output
+  targets unchanged.
+- Added two scoped v0.2 build orders: typed graph ports first, then calibrated
+  spectral/dispersion data.
+
 ## 0.1.1 — 2026-09-01
 
 Nacre Atelier as the living explorer.
